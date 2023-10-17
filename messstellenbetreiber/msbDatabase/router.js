@@ -3,22 +3,15 @@ const dbConnector = require("./dbConnector");
 const router = express.Router();
 const endpoints = "/api/v1/";
 const db_type = true;
-const sqlite_file = "db.sql";
+const sqlite_file = "msb.db";
 const dbConnection = new dbConnector(db_type, sqlite_file);
 
-// middleware that is specific to this router
+// middleware to check authentification
 router.use((request, response, next) => {
-    console.log('Time: ', Date.now());
-    authentificate(request, response);
-    next();
-});
-
-function authentificate(request, response) {
     // TODO: check authnetification
+    dbConnection.read_db()
     response.send("Nö du hast kein access");
-    response.end();
-}
-
+});
 
 router.get(endpoints + "historical_data", (request, response) => {
     response.send('Soll die Stromverbrauchsdaten eines Kunden zurückgeben');
