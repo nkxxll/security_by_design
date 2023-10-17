@@ -1,7 +1,9 @@
-import http.server as hserver
-def run(server_port=8080, server_class=hserver.HTTPServer, handler_class=hserver.BaseHTTPRequestHandler):
-    server_address = ('', server_port)
-    httpd = server_class(server_address, handler_class)
-    httpd.serve_forever()
+from bottle import route, run, template
 
-run(8080)
+PORT = 8080
+
+@route('/hello/<name>')
+def random_function_name(name):
+    return template('<b>Hello {{name}}</b>!', name=name)
+
+run(host='localhost', port=PORT)
