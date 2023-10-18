@@ -18,7 +18,7 @@ router.use((request, response, next) => {
 });
 
 router.get(endpoints["stromverbrauch"], (request, response) => {
-    response.send('Soll die Stromverbrauchsdaten eines Kunden zurückgeben');
+    response.send('Soll alle Stromverbrauchsdaten eines Kunden zurückgeben');
 });
 
 router.get(endpoints["current_consumption"], (request, response) => {
