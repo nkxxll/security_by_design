@@ -16,7 +16,7 @@ class dbConnector {
     }
 
     /* Stromverbrauch von einer bestimmten Zeitspanne */
-    read_Stromverbrauch_Year(kunde, zeitspanne_anfang, zeitspanne_ende) {
+    read_Stromverbrauch_timeframe(kunde, zeitspanne_anfang, zeitspanne_ende) {
         this.db_connection.each(`SELECT KundenID,
                         sz.StromverbrauchGesamt, 
                         SUM(sz.StromverbrauchMomentan) AS test 

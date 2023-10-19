@@ -34,8 +34,14 @@ router.get(endpoints["stromverbrauch"] + "/:year/:month", (request, response) =>
     response.send("Soll die Stromverbrauchsdaten des Jahresponse " + request.params.year + " und Monats " + request.params.month + " eines Kunden zurückgeben");
 });
 
-router.get("/api/v1/stromverbrauch/hello", (request, response) => {
+router.get("/api/v1/stromverbrauch/read_Stromverbrauch_all", (request, response) => {
     data = dbConnection.read_Stromverbrauch_all("1");
     response.send(data);
 });
+
+router.get("/api/v1/stromverbrauch/read_Stromverbrauch_timeframe", (request, response) => {
+    data = dbConnection.read_Stromverbrauch_timeframe("1", 2345, 234);
+    response.send(data);
+});
+
 module.exports = router
