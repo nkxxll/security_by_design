@@ -13,8 +13,8 @@ const sqlite_file = "msb.db";
 // middleware to check authentification
 router.use((request, response, next) => {
     // TODO: check authnetification
-    dbConnection.read_db()
-    response.send("Nö du hast kein access");
+    // response.send("Nö du hast kein access");
+    next();
 });
 
 router.get(endpoints["stromverbrauch"], (request, response) => {
@@ -22,6 +22,7 @@ router.get(endpoints["stromverbrauch"], (request, response) => {
 });
 
 router.get(endpoints["current_consumption"], (request, response) => {
+    data = dbConnection.read_Stromverbrauch_all("");
     response.send('Soll die Stromverbrauchsdaten eines Kunden zurückgeben');
 });
 
