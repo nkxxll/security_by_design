@@ -56,6 +56,28 @@ class dbConnector {
         })
     }
 
+    Dateneingabe_Stromzaehler(stromzaehler_id, timestamp, consumtion) {
+        this.db_connection.serialize(() => {
+            let rows = [];
+            this.db_connection.each(`INSERT INTO
+                                        (StromzählerID, 
+                                        StromverbrauchGesamt, 
+                                        Uhrzeit)
+                                    VALUES
+                                        (?,
+                                        ?,
+                                        ?)`,
+                [stromzaehler_id, timestamp, consumtion], (err, row) => {
+                    if (err) {
+                        console.error(err.message);
+                    }
+                    console.log(row);
+                    rows.push(row);
+                });
+            return rows;
+        })
+    }
+
 
     close_connection() {
         this.db_connection.close((err) => {
@@ -66,6 +88,8 @@ class dbConnector {
         });
     }
 }
+
+    
 
 module.exports = dbConnector
 
