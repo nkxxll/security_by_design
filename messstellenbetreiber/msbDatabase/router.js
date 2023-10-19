@@ -36,14 +36,18 @@ router.get(endpoints["stromverbrauch"] + "/:year/:month", (request, response) =>
 });
 
 router.get("/api/v1/stromverbrauch/read_Stromverbrauch_all", (request, response) => {
-    console.log("Cookies.", request.cookies);
-    data = dbConnection.read_Stromverbrauch_all("1");
+    data = dbConnection.read_Stromverbrauch_all(request.cookies["kunde"]);
     response.send(data);
 });
 
 router.get("/api/v1/stromverbrauch/read_Stromverbrauch_timeframe", (request, response) => {
     // TODO: use signed  cookies
     data = dbConnection.read_Stromverbrauch_timeframe(request.cookies["kunde"], request.cookies["timeframe_start"], request.cookies["timeframe_end"]);
+    response.send(data);
+});
+
+router.get("/api/v1/stromverbrauch/save_consumtion", (request, response) => {
+    data = dbConnection.Dateneingabe_Stromzaehler(request.cookies["stromzaehler_id"], request.cookies["timestamp"], request.cookies["consumtion"]);
     response.send(data);
 });
 
