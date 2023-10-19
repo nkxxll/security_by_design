@@ -39,6 +39,7 @@ class dbConnector {
 
     /* Stromverbrauch gesamt seid Vertragsbeginn */
     read_Stromverbrauch_all(kunde) {
+        rows = []
         this.db_connection.serialize(() => {
             this.db_connection.each(`SELECT KundenID, 
                         sz.Stromverbrauch_gesamt, 
@@ -52,8 +53,10 @@ class dbConnector {
                         console.error(err.message);
                     }
                     console.log(row);
+                    rows.append(row);
                 });
         });
+        return rows;
     }
 
 
