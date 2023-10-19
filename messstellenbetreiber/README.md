@@ -1,6 +1,14 @@
-messtellenbetreiber
+# messtellenbetreiber
+### Anforderungen
+- Baut Stromzähler ein
+- Betreibt Stromzähler
+- Wartet Stromzähler
+- steht in der Stromrechnung
+- Annahme: jeder Kunde hat bereits einen intelligenten Stromzähler mit Gateway weil wir zu viel geld haben
+- 
 
-Datenbank:
+# Betreiber
+## Datenbank:
 Tabellen:
 - Kunde_Stromzähler Relationstabelle:
     - KundenID
@@ -23,9 +31,29 @@ Tabellen:
     - letzte_manuelle_Ablese_datum # in sekunden seit 1970
     - letzte_Eichung_datum # in sekunden seit 1970
     - nächste_Wartung_datum # in sekunden seit 1970
-
+# TODO: tabelle für Key für jeden einzelnen Stromzähler mit dem man authentifiziert dass man seine daten lesen darf
 SQL_Befehle:
 Read stromverbrauch per Year:
 """
 SELECT KundenID, sz.Stromverbrauch_gesamt, SUM(sz.Stromverbrauch_momentan) AS test FROM Stromzähler_Verbrauch as sz INNER JOIN Kunde_Stromzähler as k ON sz.StromzählerID=k.StromzählerID;
 """
+## Endpoints/API
+### Anforderungen
+- gibt aus wie viel Strom in einem Zeitraum ein Stromzähler verbraucht hat
+- gibt Vertragsdaten zu einem bestimmten Vertrags eines Kunden aus
+- gibt persönliche Daten eines Kunden aus Möglichkeit, persönliche Daten abzuändern
+- 
+
+
+# intelligenter Stromzähler Sim:
+### Anforderungen:
+- jeder Stromzähler benötigt ein Digitales Display
+- Muss Kommunkationsfähig über das Internet sein
+- Integration von Firewall Mechanismen
+- Kommunikationsverbindungen ausschließlich von innen nach außen
+- Authentifizierung, Verschlüsselung und Integritätssicherung jeglicher Kommunikation
+- nutzen Simkarten aka. LTE für Internetverbindung
+- Zählerstand wird alle 15 Minuten an den Betreiber gesendet
+
+
+# TODO: text über die verwendeten Tools (JS, Express, python, Django)

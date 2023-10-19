@@ -1,5 +1,4 @@
 const sqlite3 = require('sqlite3');
-const validator = require('validator');
 
 class dbConnector {
     constructor(db_type, db_location) {

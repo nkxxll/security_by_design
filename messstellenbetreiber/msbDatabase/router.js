@@ -2,10 +2,9 @@ const express = require('express');
 const dbConnector = require("./dbConnector");
 const router = express.Router();
 const api_location = "/api/v1/";
-const endpoints = {
-    "stromverbrauch": api_location + "stromverbrauch/",
-    "current_consumption": endpoints["stromverbrauch"] + "current",
-};
+const endpoints = {};
+endpoints["stromverbrauch"] = api_location + "stromverbrauch/";
+endpoints["current_consumption"] = endpoints["stromverbrauch"] + "current";
 const db_type = true;
 const sqlite_file = "msb.db";
 const dbConnection = new dbConnector(db_type, sqlite_file);
