@@ -1,9 +1,8 @@
 const express = require('express');
 const dbConnector = require("./dbConnector");
 const router = express.Router();
-const api_location = "/api/v1/";
 const endpoints = {};
-endpoints["stromverbrauch"] = api_location + "stromverbrauch/";
+endpoints["stromverbrauch"] = "/api/v1/stromverbrauch/";
 endpoints["current_consumption"] = endpoints["stromverbrauch"] + "current";
 const db_type = "sqlite3";
 const sqlite_file = "msb.db";
@@ -35,7 +34,7 @@ router.get(endpoints["stromverbrauch"] + "/:year/:month", (request, response) =>
     response.send("Soll die Stromverbrauchsdaten des Jahresponse " + request.params.year + " und Monats " + request.params.month + " eines Kunden zurückgeben");
 });
 
-router.get(endpoints["stromverbrauch"] + "/hello", (request, response) => {
+router.get("/api/v1/stromverbrauch/hello", (request, response) => {
     data = dbConnection.read_Stromverbrauch_all("1");
     response.send(data);
 });
