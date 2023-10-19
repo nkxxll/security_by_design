@@ -12,6 +12,7 @@ const dbConnection = new dbConnector(db_type, sqlite_file);
 // middleware to check authentification
 router.use((request, response, next) => {
     // TODO: check authnetification
+    // request.cookies
     // response.send("Nö du hast kein access");
     next();
 });
@@ -35,12 +36,14 @@ router.get(endpoints["stromverbrauch"] + "/:year/:month", (request, response) =>
 });
 
 router.get("/api/v1/stromverbrauch/read_Stromverbrauch_all", (request, response) => {
+    console.log("Cookies.", request.cookies);
     data = dbConnection.read_Stromverbrauch_all("1");
     response.send(data);
 });
 
 router.get("/api/v1/stromverbrauch/read_Stromverbrauch_timeframe", (request, response) => {
-    data = dbConnection.read_Stromverbrauch_timeframe("1", 2345, 234);
+    // TODO: use signed  cookies
+    data = dbConnection.read_Stromverbrauch_timeframe(request.cookies["kunde"], request.cookies["timeframe_start"], request.cookies["timeframe_end"]);
     response.send(data);
 });
 
