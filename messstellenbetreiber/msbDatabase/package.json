@@ -4,7 +4,8 @@
     "sqlite3": "^5.1.6"
   },
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "run": "node server.js"
   },
   "name": "msbdatabase",
   "version": "1.0.0",
