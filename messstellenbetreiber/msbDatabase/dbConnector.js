@@ -59,7 +59,7 @@ class dbConnector {
     Dateneingabe_Stromzaehler(stromzaehler_id, timestamp, consumtion) {
         this.db_connection.serialize(() => {
             let rows = [];
-            this.db_connection.each(`INSERT INTO
+            this.db_connection.each(`INSERT INTO StromzahlerVerbrauch
                                         (StromzählerID, 
                                         StromverbrauchGesamt, 
                                         Uhrzeit)
