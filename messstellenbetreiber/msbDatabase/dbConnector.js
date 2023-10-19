@@ -19,15 +19,15 @@ class dbConnector {
     read_Stromverbrauch_Year(kunde, zeitspanne_anfang, zeitspanne_ende) {
         db.serialize(() => {
             db.each( `SELECT KundenID,
-                sz.Stromverbrauch_gesamt, 
-                SUM(sz.Stromverbrauch_momentan) AS test 
-            FROM Stromzähler_Verbrauch as sz 
-            INNER JOIN Kunde_Stromzähler as k 
-            ON sz.StromzählerID=k.StromzählerID
-            WHERE KundenID = ?
-                AND Uhrzeit < ? AND Uhrzeit > ?`,
-            [kunde, zeitspanne_anfang, zeitspanne_ende],
-            (err, row) => {
+                        sz.Stromverbrauch_gesamt, 
+                        SUM(sz.Stromverbrauch_momentan) AS test 
+                    FROM Stromzähler_Verbrauch as sz 
+                    INNER JOIN Kunde_Stromzähler as k 
+                    ON sz.StromzählerID=k.StromzählerID
+                    WHERE KundenID = ?
+                        AND Uhrzeit < ? AND Uhrzeit > ?`,
+             [kunde, zeitspanne_anfang, zeitspanne_ende],
+             (err, row) => {
                 if (err) {
                     console.error(err.message);
                 }
@@ -37,14 +37,16 @@ class dbConnector {
     }
     
     /* Stromverbrauch gesamt seid Vertragsbeginn */
-    read_Stromverbrauch_Year(Kunden, zeitspanne_anfang, zeitspanne_ende) {
+    read_Stromverbrauch_all(kunde) {
         db.serialize(() => {
             db.each(`SELECT KundenID, 
                         sz.Stromverbrauch_gesamt, 
                     SUM(sz.Stromverbrauch_momentan) AS test 
                     FROM Stromzähler_Verbrauch as sz 
                     INNER JOIN Kunde_Stromzähler as k 
-                    ON sz.StromzählerID=k.StromzählerID`, (err, row) => {
+                    ON sz.StromzählerID=k.StromzählerID
+                    WHERE KundenID = ?`,
+                    [kunde], (err, row) => {
                 if (err) {
                     console.error(err.message);
                 }
