@@ -46,7 +46,8 @@ router.get("/api/v1/stromverbrauch/read_Stromverbrauch_timeframe", (request, res
     response.send(data);
 });
 
-router.get("/api/v1/stromverbrauch/save_consumtion", (request, response) => {
+router.post("/api/v1/stromverbrauch/save_consumtion", (request, response) => {
+    console.log("Stromzähler", request.cookies["stromzaehler_id"], "saved its data")
     data = dbConnection.Dateneingabe_Stromzaehler(request.cookies["stromzaehler_id"], request.cookies["timestamp"], request.cookies["consumtion"]);
     response.send(data);
 });
