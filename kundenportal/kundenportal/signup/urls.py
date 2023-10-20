@@ -1,8 +1,8 @@
 from django.urls import path
-from django.views import generic
 
+from . import views
 
 appname = 'signup'
 urlpatterns = [
-    path('', generic.ArchiveIndexView.as_view(), name='signup'),
+    path('', views.index, name='index'),
 ]
