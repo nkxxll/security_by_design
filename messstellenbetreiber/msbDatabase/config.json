@@ -2,6 +2,6 @@
     "port": 3000,
     "database": {
         "type": "sqlite3",
-        "location": "msb.db"
+        "location": "msb_nicht_von_chibbi_also_richtig"
     }
 }
