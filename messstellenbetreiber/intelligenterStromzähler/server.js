@@ -60,8 +60,17 @@ function sendData(data) {
 
 // TODO: sendData should be called for unlimited times in an interval
 // aka. every X Seconds sendData should be executed
-function call_send_Data() {
-
+function sendpopulatedData() {
+    sendData(calcData())
 }
-setInterval(FetchData, 1000);
-sendData(calcData());
+
+function call_send_Data() {
+    // const Interval = 
+    setInterval(sendpopulatedData, myConfig.getTimeInterval() * 1000);
+}
+
+function stop_send_Data() {
+    clearInterval(Interval);
+}
+
+call_send_Data()
