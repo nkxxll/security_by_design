@@ -1,0 +1,14 @@
+{
+    "id": 3427824,
+    "time_interval": 900,
+    "save_schema": {
+        "url": "http://localhost:3000/api/v1/stromverbrauch/save_consumtion",
+        "stromzaehler_id": "id",
+        "timestamp": "timestamp",
+        "totalPowerConsumption": "power"
+    },
+    "simulation": {
+        "minAdd": 0,
+        "maxAdd": 1000
+    }
+}

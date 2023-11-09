@@ -1,22 +1,49 @@
 const fetch = require("node-fetch");
+const configuration = require("./configuration");
+const customMath = require("./customMath");
+const myConfig = new configuration();
+const myMath = new customMath();
+console.log(myConfig.getAllConfig())
 
-const id = 3427824;
+// TODO: add interval between update to Configuration
+// TODO: add to Configuration
+const id = myConfig.getId();
 
-const startingPower = 324803;
-let addingPower = 349;
+// TODO: add to simulation Config
+// TODO: startingPower should be 0
+const startingPower = 0;
+const minAdd = myConfig.getSimulationMinAdd();
+const maxAdd = myConfig.getSimulationMaxAdd();;
+let totalConsumption = startingPower;
 
-const body = {};
-body["timestamp"] = Date.now();
-body["stromzaehler_id"] = id;
-body["consumtion"] = startingPower;
 
-function sendData() {
+/**
+ * creates and returns the Data Array needed for sendData for a running Simulation
+ * 0: id (int)
+ * 1: timestamp (int)
+ * 2: totalPowerConsumption (int)
+ */
+function calcData() {
+    const timestamp = Date.now();
+    const totalPowerConsumption = totalConsumption + myMath.getRandomInt(minAdd, maxAdd);
+    return [id, timestamp, totalPowerConsumption]
+}
+
+/**
+ * Sends Data (id,timestamp,powerconsumption) to msb db
+ * data needs to be an array:
+ * 0: id (int)
+ * 1: timestamp (int)
+ * 2: totalPowerConsumption (int)
+ */
+function sendData(data) {
     console.log("sending Data");
-    body["timestamp"] = Date.now();
-    body["power"] = body["power"] + addingPower;
-    // TODO: make addingPower random and sometimes negativ 
-    fetch('http://localhost:3000/api/v1/stromverbrauch/save_consumtion', {
-        method: 'POST', body: JSON.stringify(body),
+    let newBody = {};
+    newBody[myConfig.getSaveIdName()] = data[0];
+    newBody[myConfig.getSaveTimestampName()] = data[1];
+    newBody[myConfig.getSaveConsumptionName()] = data[2];
+    fetch(myConfig.getSaveURL(), {
+        method: 'POST', body: JSON.stringify(newBody),
         headers: { 'Content-Type': 'application/json' }
     }).then((result) => {
         console.log("Success with sending Data:", result);
@@ -29,8 +56,12 @@ function sendData() {
             console.error("PROBLEM: ", err);
         }
     });
-
 }
 
-sendData();
-setTimeout(sendData, 15 * 60 * 1000);
+// TODO: sendData should be called for unlimited times in an interval
+// aka. every X Seconds sendData should be executed
+function call_send_Data() {
+
+}
+setInterval(FetchData, 1000);
+sendData(calcData());
