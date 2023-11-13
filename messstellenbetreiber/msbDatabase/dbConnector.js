@@ -11,11 +11,42 @@ class dbConnector {
             });
         }
         else if (db_type == "mysql" || db_type == "Mysql") {
-            this.db_connection = "NOT IMPLEMENTED";
+            this.db_connection = Null;
+        }
+    }
+    runSQL(sql, params, response, changeOutput) {
+        if (params != undefined && params != null) {
+            this.db_connection.all(sql, params, (err, rows) => {
+                console.log("Read:", rows);
+                if (typeof changeOutput === 'function') {
+                    rows = changeOutput(rows);
+                }
+                console.log("Sendin:", rows);
+                response.send(rows);
+            });
         }
     }
 
-    /* Stromverbrauch von einer bestimmten Zeitspanne */
+    /*check if key is in database*/
+    test(response) {
+        this.runSQL("SELECT * FROM StromzahlerVerbrauch", [], response);
+    }
+
+    /*check if key is in database*/
+    exists_ZaehlerKey(zaehlerKey) {
+        this.db_connection.each(`SELECT Auth_Key
+                    FROM StromzahlerAuth 
+                    WHERE Auth_Key = ?`,
+            [zaehlerKey],
+            (err, row) => {
+                if (err) {
+                    console.error(err.message);
+                }
+                console.log(row.id + "\t" + row.name);
+            });
+    }
+
+    /* Stromverbrauch eines bestimmten Zeitraums */
     read_Stromverbrauch_timeframe(kunde, zeitspanne_anfang, zeitspanne_ende) {
         this.db_connection.each(`SELECT KundenID,
                         sz.StromverbrauchGesamt, 
@@ -54,6 +85,32 @@ class dbConnector {
                 });
             return rows;
         })
+    }
+
+    read_Wartungs_datum(stromzaehler_id) {
+        this.db_connection.serialize(() => {
+            let rows = [];
+            this.db_connection.each(`INSERT INTO StromzahlerVerbrauch
+                                        (StromzählerID, 
+                                        StromverbrauchGesamt, 
+                                        Uhrzeit)
+                                    VALUES
+                                        (?,
+                                        ?,
+                                        ?)`,
+                [stromzaehler_id, timestamp, consumtion], (err, row) => {
+                    if (err) {
+                        console.error(err.message);
+                    }
+                    console.log(row);
+                    rows.push(row);
+                });
+            return rows;
+        })
+    }
+
+    read_Eichungs_datum() {
+
     }
 
     Dateneingabe_Stromzaehler(stromzaehler_id, timestamp, consumtion) {

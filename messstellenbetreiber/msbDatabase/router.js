@@ -11,10 +11,15 @@ const dbConnection = new dbConnector(db_type, sqlite_file);
 
 // middleware to check authentification
 router.use((request, response, next) => {
-    // TODO: check authnetification
-    // request.cookies
-    // response.send("Nö du hast kein access");
-    next();
+    // this is fine, weil wir cookies ausserhalb der sim mit der "secure" flag schicken würden 
+    // secure flag stellt 100% sicher das cookies über tls geschickt werden
+    const zaehlerKey = request.cookies["stromzähler_key"];
+    dbConnection.test(response);
+    if (dbConnection.exists_ZaehlerKey(zaehlerKey)) {
+        next();
+    } else {
+        //return response.send("Nö du hast kein access");
+    }
 });
 
 
