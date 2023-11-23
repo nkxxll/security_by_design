@@ -31,7 +31,6 @@ Tabellen:
     - letzte_manuelle_Ablese_datum # in sekunden seit 1970
     - letzte_Eichung_datum # in sekunden seit 1970
     - nächste_Wartung_datum # in sekunden seit 1970
-# TODO: tabelle für Key für jeden einzelnen Stromzähler mit dem man authentifiziert dass man seine daten lesen darf
 SQL_Befehle:
 Read stromverbrauch per Year:
 """
@@ -56,4 +55,5 @@ SELECT KundenID, sz.Stromverbrauch_gesamt, SUM(sz.Stromverbrauch_momentan) AS te
 - Zählerstand wird alle 15 Minuten an den Betreiber gesendet
 
 
-# TODO: text über die verwendeten Tools (JS, Express, python, Django)
+# text über die verwendeten Tools (JS, Express, python, Django)
+siehe google docs

@@ -5,12 +5,8 @@ const myConfig = new configuration();
 const myMath = new customMath();
 console.log(myConfig.getAllConfig())
 
-// TODO: add interval between update to Configuration
-// TODO: add to Configuration
 const id = myConfig.getId();
 
-// TODO: add to simulation Config
-// TODO: startingPower should be 0
 const startingPower = 0;
 const minAdd = myConfig.getSimulationMinAdd();
 const maxAdd = myConfig.getSimulationMaxAdd();;
@@ -58,8 +54,6 @@ function sendData(data) {
     });
 }
 
-// TODO: sendData should be called for unlimited times in an interval
-// aka. every X Seconds sendData should be executed
 function sendpopulatedData() {
     sendData(calcData())
 }
