@@ -2,27 +2,40 @@ from django.contrib.admin.options import HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib.auth import logout as lo
 
+from .utils.forms import CreateUserForm
 
 def index(request):
-    return render(request, template_name="templates/kundenportal/index.html")
+    return render(request, "index.html", {})
 
 
 def logout(request):
     lo(request)
     return HttpResponseRedirect("/", request)
 
-
-def login(request):
-    pass
-
-
 def edit(request):
-    pass
+    return render(request, "edit.html")
 
 
 def signup(request):
-    pass
+    if request.method == "POST":
+        form = CreateUserForm(request.POST)
+        if form.is_valid():
+            # TODO:
+            # crate user
+            # log user in
+            return HttpResponseRedirect("/accouts/profile", request)
+        else:
+            # return form error
+            return render(
+                request, template_name="signup/create_user.html", context={"form": form}
+            )
+    else:
+        form = CreateUserForm()
+    return render(
+        request, template_name="signup/create_user.html", context={"form": form}
+    )
 
 
 def profile(request):
-    pass
+    context = dict()
+    return render(request, "profile.html", context)

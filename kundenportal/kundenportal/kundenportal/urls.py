@@ -16,13 +16,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.contrib.auth import views as auth_views
 from . import views
 
 app_name = "kundenportal"
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', views.index , name='index'),
-    path("login/", views.login, name="login"),
+    path("admin/", admin.site.urls),
+    path("", views.index, name="index"),
+    path(
+        "login/",
+        auth_views.LoginView.as_view(template_name="kundenportal/login.html"),
+        name="login",
+    ),
     path("logout/", views.logout, name="logout"),
     path("profile/", views.profile, name="profile"),
     path("edit/", views.edit, name="edit"),
