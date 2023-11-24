@@ -23,16 +23,16 @@ def signup(request):
             # TODO:
             # crate user
             # log user in
-            return HttpResponseRedirect("/accouts/profile", request)
+            return HttpResponseRedirect("profile", request)
         else:
             # return form error
             return render(
-                request, template_name="signup/create_user.html", context={"form": form}
+                request, template_name="signup.html", context={"form": form}
             )
     else:
         form = CreateUserForm()
     return render(
-        request, template_name="signup/create_user.html", context={"form": form}
+        request, template_name="signup.html", context={"form": form}
     )
 
 

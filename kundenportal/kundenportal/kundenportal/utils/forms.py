@@ -9,3 +9,8 @@ class CreateUserForm(forms.Form):
     password = forms.CharField(
         min_length=10, label="Password", widget=forms.PasswordInput
     )
+
+class CreateUserMeta(forms.Form):
+    # todo finish
+    auth_key = forms.CharField(max_length=20, min_length=20, label="Authentication Key Messtellenbetreiber")
+    vertrag = forms.ChoiceField(label="vertrag")
