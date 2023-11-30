@@ -9,12 +9,12 @@
 # Messstellenbetreiber
 ## Simulationspopulation
 - sql commands to
-  - fill stromzähler location tabelle : started
-  - fill stromzähler id key relation tabelle (auth tabelle)
+  - [X] fill stromzähler location tabelle : started
+  - [X] fill stromzähler id key relation tabelle (auth tabelle)
   - fill stromzähler wartung tabelle
   - fill stormzähler verbrauch tabelle : done in intelligenter Stromzähler
-- zusammenfügen dieser SQL Commands um ein neuen Stromzähler mit einer bestimmten Menge an Daten zu generieren : in klärung
-- generierung von vielen Stromzählern (5000 oder so)
+- [X] zusammenfügen dieser SQL Commands um ein neuen Stromzähler mit einer bestimmten Menge an Daten zu generieren : in klärung
+- [X] generierung von vielen Stromzählern (5000 oder so)
 ## Database API 
 - automatic api tests via a python script or smth
 - check config via schema validation
@@ -24,4 +24,4 @@
 - erfragen ob es einen mehrwert hat es zu erstellen
 - hoffen dass wirs lassen können
 - erfragen ob bei der registrierung beim kundenportal automatisch ein neuer stormzähler für den kunden erstellt werden soll
-- wenn das der Fall ist, ist es auch sinnvoller, einfach ne menge registrierungen zu simulieren und dann dem msb zu sagen "mach mal da random beispieldaten für"
+- wenn das der Fall ist, ist es auch sinnvoller, einfach ne menge registrierungen zu simulieren und dann dem msb zu sagen "mach mal da random beispieldaten für"git 
