@@ -11,6 +11,11 @@ class CreateUserForm(forms.Form):
     )
 
 class CreateUserMeta(forms.Form):
-    # todo finish
     auth_key = forms.CharField(max_length=20, min_length=20, label="Authentication Key Messtellenbetreiber")
-    vertrag = forms.ChoiceField(label="vertrag")
+    contract = forms.ChoiceField(label="vertrag")
+    # Address start
+    street = forms.CharField(max_length=100)
+    street_number = forms.CharField(max_length=10)
+    postal_code = forms.CharField(max_length=10)
+    city = forms.CharField(max_length=100)
+    # Address end
