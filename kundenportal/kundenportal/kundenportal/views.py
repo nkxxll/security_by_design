@@ -2,6 +2,7 @@ from json import loads
 from django.contrib.admin.options import HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib.auth import logout as lo
+from django.contrib.auth.decorators import login_required
 from datetime import datetime
 from django.contrib.auth.models import User
 from .models import PowerData
@@ -25,6 +26,7 @@ def logout(request):
     lo(request)
     return HttpResponseRedirect("/", request)
 
+@login_required
 def edit(request):
     return render(request, "edit.html")
 
@@ -49,6 +51,7 @@ def signup(request):
     )
 
 
+@login_required
 def profile(request):
     context = dict()
     context["power_data"] = _get_powerdata(request.user, Period.YEAR)
