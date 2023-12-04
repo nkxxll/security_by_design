@@ -10,9 +10,11 @@ import requests
 
 from .utils.forms import CreateUserForm, CreateUserMeta, CreateEditData
 
-class Period():
+
+class Period:
     YEAR = "year"
     MONTH = "month"
+
 
 # TODO not sure if this is the right url
 MSB_API_URL = "http://localhost:8000/stromdaten"
@@ -26,6 +28,7 @@ def logout(request):
     lo(request)
     return HttpResponseRedirect("/", request)
 
+
 @login_required
 def edit(request):
     if request.method == "POST":
@@ -37,7 +40,9 @@ def edit(request):
         else:
             # return form error
             return render(
-                request, template_name="edit.html", context={"edit_data_form": edit_data_form}
+                request,
+                template_name="edit.html",
+                context={"edit_data_form": edit_data_form},
             )
     else:
         edit_data_form = CreateEditData()
@@ -53,18 +58,42 @@ def signup(request):
         if user_form.is_valid() and data_form.is_valid():
             # TODO:
             # crate user
+            user = User.objects.create_user(
+                user_form.cleaned_data["username"],
+                user_form.cleaned_data["email"],
+                user_form.cleaned_data["password"],
+            )
+            user.last_name = user_form.cleaned_data["last_name"]
+            user.first_name = user_form.cleaned_data["first_name"]
+            user.save()
             # log user in
-            return HttpResponseRedirect("profile", request)
+            pd = PowerData.objects.create(
+                user=user,
+                contract=data_form.cleaned_data["contract"],
+                auth_key=data_form.cleaned_data["auth_key"],
+                street=data_form.cleaned_data["street"],
+                street_number=data_form.cleaned_data["street_number"],
+                postal_code=data_form.cleaned_data["postal_code"],
+                city=data_form.cleaned_data["city"],
+            )
+            # when we have the new user created and all the data set up we want to log this user in
+            request.user = user
+            lo(request)
+            return HttpResponseRedirect("/profile", request)
         else:
             # return form error
             return render(
-                request, template_name="signup.html", context={"user_form": user_form, "data_form": data_form}
+                request,
+                template_name="signup.html",
+                context={"user_form": user_form, "data_form": data_form},
             )
     else:
         user_form = CreateUserForm()
         data_form = CreateUserMeta()
     return render(
-        request, template_name="signup.html", context={"user_form": user_form, "data_form": data_form}
+        request,
+        template_name="signup.html",
+        context={"user_form": user_form, "data_form": data_form},
     )
 
 
@@ -74,7 +103,13 @@ def profile(request):
     context["power_data"] = _get_powerdata(request.user, Period.YEAR)
     return render(request, "profile.html", context)
 
-def _get_powerdata(user: User, period: str, year: int = datetime.now().year, month: int = datetime.now().month) -> dict:
+
+def _get_powerdata(
+    user: User,
+    period: str,
+    year: int = datetime.now().year,
+    month: int = datetime.now().month,
+) -> dict:
     """get all user power data for a specific user and time period
 
     Gets all power data for a user for a specific period. The period can be a year or a month.
@@ -93,9 +128,7 @@ def _get_powerdata(user: User, period: str, year: int = datetime.now().year, mon
         dict: list of power data for user
     """
     session = requests.Session()
-    cookies = {
-            "key": PowerData.objects.get(user=user).auth_key
-            }
+    cookies = {"key": PowerData.objects.get(user=user).auth_key}
     session.cookies.update(cookies)
     # TODO finish this url part with period and year and month
     response = session.get(f"MSB_API_URL/{year}/{month}")
