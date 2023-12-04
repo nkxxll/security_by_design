@@ -5,10 +5,10 @@ from django.contrib.auth import logout as lo
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
 from django.contrib.auth.models import User
-from .models import PowerData
+from power_data.models import PowerData
 import requests
 
-from .utils.forms import CreateUserForm
+from .utils.forms import CreateUserForm, CreateUserMeta
 
 class Period():
     YEAR = "year"
@@ -33,8 +33,9 @@ def edit(request):
 
 def signup(request):
     if request.method == "POST":
-        form = CreateUserForm(request.POST)
-        if form.is_valid():
+        user_form = CreateUserForm(request.POST)
+        data_form = CreateUserMeta(request.POST)
+        if user_form.is_valid() and data_form.is_valid():
             # TODO:
             # crate user
             # log user in
@@ -42,12 +43,13 @@ def signup(request):
         else:
             # return form error
             return render(
-                request, template_name="signup.html", context={"form": form}
+                request, template_name="signup.html", context={"user_form": user_form, "data_form": data_form}
             )
     else:
-        form = CreateUserForm()
+        user_form = CreateUserForm()
+        data_form = CreateUserMeta()
     return render(
-        request, template_name="signup.html", context={"form": form}
+        request, template_name="signup.html", context={"user_form": user_form, "data_form": data_form}
     )
 
 
