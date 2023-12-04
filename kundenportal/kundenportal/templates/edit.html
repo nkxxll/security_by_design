@@ -1,1 +1,16 @@
 edit
+
+{% if edit_data_form.errors %}
+<div class="alert alert-danger">
+  {% for field, errors in edit_data_form.errors.items %} 
+      {% for error in errors %}
+          <strong>{{ field }}:</strong> {{ error }}<br />
+      {% endfor %} 
+  {% endfor %}
+</div>
+{% endif %} 
+
+<form method="post" action="{% url 'edit' %}">
+    {% csrf_token %} {{ edit_data_form }}
+  <input type="submit" value="Submit" />
+</form>

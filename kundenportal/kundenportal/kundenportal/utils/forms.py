@@ -21,3 +21,12 @@ class CreateUserMeta(forms.Form):
     postal_code = forms.CharField(max_length=10)
     city = forms.CharField(max_length=100)
     # Address end
+
+class CreateEditData(forms.Form):
+    first_name = forms.CharField(max_length=100, label="First Name")
+    last_name = forms.CharField(max_length=100, label="Last Name")
+    email = forms.EmailField(max_length=100, label="E-Mail")
+    street = forms.CharField(max_length=100, label="Street")
+    street_number = forms.CharField(max_length=10, label="Street Number")
+    postal_code = forms.CharField(max_length=10, label="Postal Code")
+    city = forms.CharField(max_length=100, label="City")

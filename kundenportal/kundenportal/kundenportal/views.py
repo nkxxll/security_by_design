@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from power_data.models import PowerData
 import requests
 
-from .utils.forms import CreateUserForm, CreateUserMeta
+from .utils.forms import CreateUserForm, CreateUserMeta, CreateEditData
 
 class Period():
     YEAR = "year"
@@ -28,7 +28,22 @@ def logout(request):
 
 @login_required
 def edit(request):
-    return render(request, "edit.html")
+    if request.method == "POST":
+        edit_data_form = CreateEditData(request.POST)
+        if edit_data_form.is_valid():
+            # TODO:
+            # update user data
+            return HttpResponseRedirect("profile", request)
+        else:
+            # return form error
+            return render(
+                request, template_name="edit.html", context={"edit_data_form": edit_data_form}
+            )
+    else:
+        edit_data_form = CreateEditData()
+    return render(
+        request, template_name="edit.html", context={"edit_data_form": edit_data_form}
+    )
 
 
 def signup(request):
