@@ -1,4 +1,3 @@
-signup 
 {% if user_form.errors or data_form.errors %}
 <div class="alert alert-danger">
   {% for field, errors in user_form.errors.items %} 
@@ -13,83 +12,120 @@ signup
 </div>
 {% endif %} 
 
-<form method="post" action="{% url 'signup' %}">
-    {% csrf_token %} {{ user_form }} {{ data_form }}
-  <input type="submit" value="Submit" />
-</form>
+<html>
+  <head>
+      <!-- Required meta tags -->
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <!--Bootstrap CSS-->
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    </head>
+    <body style="background-color: #0068FF">
 
-<p>
-  <a href="javascript:void(0);" onclick="toggleExpand('explanation')"
-    >Why are there no password rules?...</a
-  >
-</p>
-<div id="explanation" class="expandable-text" style="display: none">
-  <p>
-    Creating password rules with a specific password length requirement but
-    avoiding other strict criteria can indeed increase password entropy and make
-    your system more secure. However, it's essential to strike a balance between
-    security and user convenience. Here's why you might choose not to specify
-    additional password rules when enforcing a 10-character length:
+    {% load crispy_forms_tags %}
+
+    <!--Contact form-->
+    <form method="post" action="{% url 'signup' %}">
+        {% csrf_token %}
+        <div class="Wrapper" style="background-color: white; margin-top: 50px; position: relative; left: 50%; -ms-transform: translateX(-50%); transform: translateX(-50%); max-width: 500px; width: 100%; padding: 34px; border-radius: 6px; box-shadow: 0 5px 10px rgba(0,0,0,0.2);">
+          <div class="row justify-content-center" style="margin-bottom: 10px; font-family:Trebuchet MS; font-weight: 600; font-size: 30">
+            Sign Up
+          </div>
+          <div class="row justify-content-center" style="font-family:Trebuchet MS; color:gray; font-size: 14">
+            <div class="col-lg-12">
+              {{ user_form|crispy }}
+            </div>
+          </div>
+          <div class="row justify-content-center" style="font-family:Trebuchet MS; color:gray; font-size: 14">
+            <div class="col-lg-12">
+              {{ data_form|crispy }}
+            </div>
+          </div>
+          <input type="submit" value="Sign Up" style="box-shadow: 0 5px 10px rgba(0,0,0,0.2); margin-top: 20px; position: relative; left: 50%; -ms-transform: translateX(-50%); transform: translateX(-50%); background-color: #0068FF; border: none; border-radius: 12px; font-family:Trebuchet MS; color: white; padding: 7px 50px; text-align: center; display: inline-block; font-size: 16px;" />
+        </div>
+    </form>
+
+    <!-- Optional Javascript -->
+      <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    </body>
+</html>
+
+<div class="Wrapper" style="background-color: white; margin-top: 30px; position: relative; left: 50%; -ms-transform: translateX(-50%); transform: translateX(-50%); max-width: 800px; width: 100%; padding: 34px; border-radius: 6px; box-shadow: 0 5px 10px rgba(0,0,0,0.2);">
+  <p style="text-align: center">
+    <a href="javascript:void(0);" onclick="toggleExpand('explanation')"
+      >Why are there no password rules?...</a
+    >
   </p>
-  <ul>
-    <li>
-      <strong>User-Friendly Approach:</strong> Many users find strict password
-      rules cumbersome and frustrating. By only requiring a 10-character minimum
-      length, you strike a balance between security and user-friendliness,
-      making it easier for individuals to create and remember their passwords.
-    </li>
-    <li>
-      <strong>Diverse Passwords:</strong> With a focus on length rather than a
-      complex mix of character types, users may naturally create more diverse
-      passwords. Longer passwords are typically harder to guess, and they may
-      include a variety of characters, further enhancing security.
-    </li>
-    <li>
-      <strong>Less Risk of Forgotten Passwords:</strong> Complex rules can lead
-      to forgotten passwords, which often results in users having to reset their
-      passwords or contact support. By keeping it simple with a 10-character
-      minimum, users are less likely to forget their passwords, reducing the
-      need for password recovery.
-    </li>
-    <li>
-      <strong>Resilience Against Dictionary Attacks:</strong> While not
-      specifying rules like requiring special characters or numbers may make
-      brute force attacks more manageable, it also makes dictionary attacks less
-      effective. Longer passwords that don't follow a specific pattern can be
-      significantly more resistant to dictionary-based cracking attempts.
-    </li>
-    <li>
-      <strong>Adaptability:</strong> Users often use the same passwords across
-      multiple accounts. By allowing them to choose their preferred 10-character
-      combination, you encourage them to create unique passwords for your
-      system, increasing security across the board.
-    </li>
-    <li>
-      <strong>Educational Value:</strong> When users are allowed to create their
-      own passwords, they may become more aware of what constitutes a strong
-      password. This educational aspect can lead to better password practices
-      beyond your system.
-    </li>
-    <li>
-      <strong>Reduced Burden on Support:</strong> Complex password rules often
-      lead to users seeking help when they can't create or remember their
-      passwords. By simplifying your requirements, you reduce the burden on your
-      support team.
-    </li>
-    <li>
-      <strong>Customization:</strong> Some users may have their unique
-      strategies for creating strong and memorable passwords. Allowing them to
-      choose their own password format empowers them to use their methods while
-      still adhering to a minimum length requirement.
-    </li>
-  </ul>
-  <p>
-    While specific password rules can increase security, opting for a
-    10-character minimum length without further restrictions can be a pragmatic
-    choice, striking a balance between security and user experience. It
-    encourages users to create strong and diverse passwords while also reducing
-    the potential for frustrating experiences and support inquiries.
-  </p>
+  <div id="explanation" class="expandable-text" style="display: none">
+    <p>
+      Creating password rules with a specific password length requirement but
+      avoiding other strict criteria can indeed increase password entropy and make
+      your system more secure. However, it's essential to strike a balance between
+      security and user convenience. Here's why you might choose not to specify
+      additional password rules when enforcing a 10-character length:
+    </p>
+    <ul>
+      <li>
+        <strong>User-Friendly Approach:</strong> Many users find strict password
+        rules cumbersome and frustrating. By only requiring a 10-character minimum
+        length, you strike a balance between security and user-friendliness,
+        making it easier for individuals to create and remember their passwords.
+      </li>
+      <li>
+        <strong>Diverse Passwords:</strong> With a focus on length rather than a
+        complex mix of character types, users may naturally create more diverse
+        passwords. Longer passwords are typically harder to guess, and they may
+        include a variety of characters, further enhancing security.
+      </li>
+      <li>
+        <strong>Less Risk of Forgotten Passwords:</strong> Complex rules can lead
+        to forgotten passwords, which often results in users having to reset their
+        passwords or contact support. By keeping it simple with a 10-character
+        minimum, users are less likely to forget their passwords, reducing the
+        need for password recovery.
+      </li>
+      <li>
+        <strong>Resilience Against Dictionary Attacks:</strong> While not
+        specifying rules like requiring special characters or numbers may make
+        brute force attacks more manageable, it also makes dictionary attacks less
+        effective. Longer passwords that don't follow a specific pattern can be
+        significantly more resistant to dictionary-based cracking attempts.
+      </li>
+      <li>
+        <strong>Adaptability:</strong> Users often use the same passwords across
+        multiple accounts. By allowing them to choose their preferred 10-character
+        combination, you encourage them to create unique passwords for your
+        system, increasing security across the board.
+      </li>
+      <li>
+        <strong>Educational Value:</strong> When users are allowed to create their
+        own passwords, they may become more aware of what constitutes a strong
+        password. This educational aspect can lead to better password practices
+        beyond your system.
+      </li>
+      <li>
+        <strong>Reduced Burden on Support:</strong> Complex password rules often
+        lead to users seeking help when they can't create or remember their
+        passwords. By simplifying your requirements, you reduce the burden on your
+        support team.
+      </li>
+      <li>
+        <strong>Customization:</strong> Some users may have their unique
+        strategies for creating strong and memorable passwords. Allowing them to
+        choose their own password format empowers them to use their methods while
+        still adhering to a minimum length requirement.
+      </li>
+    </ul>
+    <p>
+      While specific password rules can increase security, opting for a
+      10-character minimum length without further restrictions can be a pragmatic
+      choice, striking a balance between security and user experience. It
+      encourages users to create strong and diverse passwords while also reducing
+      the potential for frustrating experiences and support inquiries.
+    </p>
+  </div>
 </div>
 
 <script>

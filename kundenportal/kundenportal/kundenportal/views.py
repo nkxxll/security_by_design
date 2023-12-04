@@ -57,7 +57,7 @@ def signup(request):
         data_form = CreateUserMeta(request.POST)
         if user_form.is_valid() and data_form.is_valid():
             # TODO:
-            # crate user
+            # create user
             user = User.objects.create_user(
                 user_form.cleaned_data["username"],
                 user_form.cleaned_data["email"],

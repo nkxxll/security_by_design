@@ -11,9 +11,48 @@
     {% endif %}
 {% endif %}
 
-You are currently logged in as {{ user }}.
+<html>
+  <head>
+      <!-- Required meta tags -->
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <!--Bootstrap CSS-->
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    </head>
+    <body style="background-color: #0068FF">
 
-<form method="post" action="{% url 'login' %}">
+    {% load crispy_forms_tags %}
+
+    <!--Contact form-->
+    <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        <div class="Wrapper" style="background-color: white; margin-top: 50px; position: absolute; left: 50%; top: 40%; -ms-transform: translate(-50%, -50%); transform: translate(-50%, -50%); max-width: 500px; width: 100%; padding: 34px; border-radius: 6px; box-shadow: 0 5px 10px rgba(0,0,0,0.2);">
+            <div class="row justify-content-center" style="margin-bottom: 10px; font-family:Trebuchet MS; font-weight: 600; font-size: 30">
+            Login
+          </div>
+          <div class="row justify-content-center" style="font-family:Trebuchet MS; color:gray; font-size: 14">
+            <div class="col-lg-12">
+              {{ form.username|as_crispy_field }}
+            </div>
+          </div>
+          <div class="row justify-content-center" style="margin-bottom: 15px; font-family:Trebuchet MS; color:gray; font-size: 14">
+            <div class="col-lg-12">
+              {{ form.password|as_crispy_field }}
+            </div>
+          </div>
+          You are currently logged in as {{ user }}.
+          <input type="submit" value="Login" style="box-shadow: 0 5px 10px rgba(0,0,0,0.2); margin-top: 20px; position: relative; left: 50%; -ms-transform: translateX(-50%); transform: translateX(-50%); background-color: #0068FF; border: none; border-radius: 12px; font-family:Trebuchet MS; color: white; padding: 7px 50px; text-align: center; display: inline-block; font-size: 16px;" />
+        </div>
+    </form>
+
+    <!-- Optional Javascript -->
+      <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    </body>
+</html>
+
+<!-- <form method="post" action="{% url 'login' %}">
 {% csrf_token %}
 <table>
 <tr>
@@ -24,8 +63,8 @@ You are currently logged in as {{ user }}.
     <td>{{ form.password.label_tag }}</td>
     <td>{{ form.password }}</td>
 </tr>
-</table>
+</table> -->
 
-<input type="submit" value="login">
+<!-- <input type="submit" value="login"> -->
 <input type="hidden" name="next" value="{{ next }}">
 </form>
