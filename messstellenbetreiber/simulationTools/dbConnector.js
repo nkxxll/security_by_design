@@ -67,10 +67,10 @@ class dbConnector {
     }
 
     //to do 
-    fill_verbrauch_db(stromzahlerID, verbrauch, uhrzeit) {
-        this.db_connection.each(`INSERT INTO StromzahlerAuth (StromzahlerID, Auth_Key) 
-            VALUES (?, ?)`,
-            [random_id, random_key],
+    fill_verbrauch_db(stromzahlerID, stromverbrauchGesamt, stromverbrauchJetzt) {
+        this.db_connection.each(`INSERT INTO StromzahlerVerbrauch (StromzahlerID, StromverbrauchGesamt, StromverbrauchJetzt) 
+            VALUES (?, ?, ?)`,
+            [stromzahlerID, stromverbrauchGesamt, stromverbrauchJetzt],
             (err, row) => {
                 if (err) {
                     console.error(err.message);

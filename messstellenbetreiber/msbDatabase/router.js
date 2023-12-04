@@ -27,7 +27,7 @@ router.get(endpoints["stromverbrauch"], (request, response) => {
     response.send('Soll alle Stromverbrauchsdaten eines Kunden zurückgeben');
 });
 
-router.get(endpoints["current_consumption"], (request, response) => {
+router.get(endpoints["stromverbrauch"] + "current", (request, response) => {
     data = dbConnection.read_Stromverbrauch_all("");
     response.send('Soll die Stromverbrauchsdaten eines Kunden zurückgeben');
 });
