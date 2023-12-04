@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+from os import path
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-hgyuq#c#i#3i8@$)m_w#s77%4emuzp#(y3b57yzr%f%6x_gsre'
+SECRET_KEY = 'django-insecure-$9v_e0v&$riaxz8fd!ndu7=tcf^^(6pshitfje7l^=#_g)+q1%'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -31,9 +32,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'login.apps.LoginConfig',
-    'accounts.apps.AccountsConfig',
-    'signup.apps.SignupConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -57,7 +55,7 @@ ROOT_URLCONF = 'kundenportal.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [path.join(BASE_DIR, "templates/kundenportal/"),BASE_DIR, path.join(BASE_DIR, "templates/")],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
