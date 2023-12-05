@@ -96,6 +96,7 @@ class dbConnector {
 
     create_db() {
         const commands = [
+            `DROP DATABASE msb`,
             `CREATE TABLE Position_Stromzahler (
                 StromzahlerID INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT,
                 Straße TEXT, 

@@ -16,9 +16,7 @@ function generate_random_date(start_year, end_year) {
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const day = Math.floor(Math.random() * daysInMonth) + 1;
     const randomDate = new Date(year, month, day);
-
-    console.log(randomDate.getTime());
-    return randomDate.getTime()
+    return randomDate.getTime();
 }
 
 
@@ -42,29 +40,89 @@ function generate_key(length) {
 
 
 
-function add_verbrauch_for_stromzahler(stromzahlerID, max_verbrauch_Wh, start_date, timeinterval_min = 15) {
-    increment = timeinterval_min * 60
+function add_verbrauch_for_stromzahler(stromzahlerID, max_verbrauch_Wh, start_date) {
+    increment = 60 * 60 * 1000;
     current_date = new Date().getTime();
     verbrauch = 0
-    for (i = start_date; i += increment; i < current_date) {
+    change = 0
+    for (i = start_date; i < current_date; i += increment) {
+        still_required = (current_date - i) / increment;
+        if (still_required < 20000 && change < 1) {
+            increment = 30 * 60 * 1000;
+            change += 1;
+        }
+        if (still_required < 10000 && change < 2) {
+            increment = 15 * 60 * 1000;
+            change += 1;
+        }
         verbrauch += Math.floor(Math.random() * (max_verbrauch_Wh / 4))
         dbConnection.fill_verbrauch_db(stromzahlerID, verbrauch, random_date + i)
     }
+    time_taken = new Date().getTime() - current_date
+    console.log(stromzahlerID, "took", time_taken, "ms aka.", time_taken / 1000, "s")
 }
 
 dbConnection.db_connection.serialize(function () {
     let id_array = [];
+
+    console.log("resetting db")
+    const commands = [
+        `DROP DATABASE msb`,
+        `CREATE TABLE Position_Stromzahler (
+            StromzahlerID INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT,
+            Straße TEXT, 
+            Hausnummer INTEGER,
+            Hausnummerzusatz TEXT,
+            Postleitzahl INTEGER,
+            Stadtname TEXT);`,
+        `CREATE TABLE StromzahlerAuth  (
+            StromzahlerID INTEGER,
+            Auth_Key TEXT UNIQUE PRIMARY KEY,
+            FOREIGN KEY (StromzahlerID) REFERENCES Position_Stromzahler(StromzahlerID));`,
+        `CREATE TABLE StromzahlerWartung (
+            StromzahlerID INTEGER,
+            Einbaudatum INTEGER,
+            letztesEichungsDatum INTEGER,
+            letzesWartungsDatum INTEGER,
+            FOREIGN KEY (StromzahlerID) REFERENCES Position_Stromzahler(StromzahlerID));`,
+        `CREATE TABLE StromzahlerVerbrauch (
+            StromzahlerID INTEGER,
+            StromverbrauchGesamt INTEGER,
+            StromverbrauchJetzt INTEGER,
+            Uhrzeit INTEGER,
+            FOREIGN KEY (StromzahlerID) REFERENCES Position_Stromzahler(StromzahlerID));`,
+    ];
+    commands.forEach(function (command, index) {
+        dbConnection.db_connection.run(command, function (err) {
+            console.log("creating", command)
+            if (err) {
+                console.error(`Error executing command ${index + 1}: ${command}\n${err.message}`);
+            } else {
+                console.log(`Command ${index + 1} executed successfully: ${command}`);
+            }
+        });
+    });
+    console.log("db resetted")
     for (let i = 0; i < 100; i++) {
         id = generate_random_id() + i;
         key = generate_key(15) + i;
-        console.log(id, key)
+        console.log("creating new stromzahler", id, "with auth key:", key)
         dbConnection.fill_location_db(id);
         dbConnection.fill_id_key_realtion_db(id, key);
         random_date = generate_random_date(2022, 2023);
-        add_verbrauch_for_stromzahler(id, 1000, random_date, 15)
-        id_array.push(id)
+        add_verbrauch_for_stromzahler(id, 1000, random_date, 60);
+        einbau = generate_random_date(2006, 2023);
+        einbau_year = new Date(einbau).getFullYear();
+        if (einbau_year < 2023) {
+            wartung = generate_random_date(2023, 2023);
+        }
+        else {
+            wartung = einbau;
+        }
+        dbConnection.fill_wartung_db(id, einbau, einbau, wartung);
+        id_array.push(id);
     }
-    console.log(id_array);
+    console.log("added stromzähler:", id_array);
     dbConnection.close_connection();
 });
 
