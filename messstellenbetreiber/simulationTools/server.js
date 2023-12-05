@@ -39,7 +39,6 @@ function generate_key(length) {
 }
 
 
-
 function add_verbrauch_for_stromzahler(stromzahlerID, max_verbrauch_Wh, start_date) {
     increment = 60 * 60 * 1000;
     current_date = new Date().getTime();
@@ -60,6 +59,34 @@ function add_verbrauch_for_stromzahler(stromzahlerID, max_verbrauch_Wh, start_da
     }
     time_taken = new Date().getTime() - current_date
     console.log(stromzahlerID, "took", time_taken, "ms aka.", time_taken / 1000, "s")
+}
+
+function add_verbrauch_for_stromzahler_test(stromzahlerID) {
+    verbrauch = 0;
+    for (i = 10000; i < 100000; i += 15 * 60 * 1000) {
+        verbrauch += i;
+        dbConnection.fill_verbrauch_db(stromzahlerID, verbrauch, i)
+    }
+}
+
+
+
+
+function add_stromzahler(stromzahler_id, auth_key) {
+    console.log("creating new stromzahler", id, "with auth key:", key)
+    dbConnection.fill_location_db(id);
+    dbConnection.fill_id_key_realtion_db(id, key);
+    random_date = generate_random_date(2022, 2023);
+    add_verbrauch_for_stromzahler(id, 1000, random_date, 60);
+    einbau = generate_random_date(2006, 2023);
+    einbau_year = new Date(einbau).getFullYear();
+    if (einbau_year < 2023) {
+        wartung = generate_random_date(2023, 2023);
+    }
+    else {
+        wartung = einbau;
+    }
+    dbConnection.fill_wartung_db(id, einbau, einbau, wartung);
 }
 
 dbConnection.db_connection.serialize(function () {
@@ -103,23 +130,12 @@ dbConnection.db_connection.serialize(function () {
         });
     });
     console.log("db resetted")
+    dbConnection.fill_id_key_realtion_db("testid", "testkey");
+    add_verbrauch_for_stromzahler_test("testid");
     for (let i = 0; i < 100; i++) {
         id = generate_random_id() + i;
         key = generate_key(15) + i;
-        console.log("creating new stromzahler", id, "with auth key:", key)
-        dbConnection.fill_location_db(id);
-        dbConnection.fill_id_key_realtion_db(id, key);
-        random_date = generate_random_date(2022, 2023);
-        add_verbrauch_for_stromzahler(id, 1000, random_date, 60);
-        einbau = generate_random_date(2006, 2023);
-        einbau_year = new Date(einbau).getFullYear();
-        if (einbau_year < 2023) {
-            wartung = generate_random_date(2023, 2023);
-        }
-        else {
-            wartung = einbau;
-        }
-        dbConnection.fill_wartung_db(id, einbau, einbau, wartung);
+        add_stromzahler(id, key);
         id_array.push(id);
     }
     console.log("added stromzähler:", id_array);
