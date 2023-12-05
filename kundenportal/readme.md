@@ -29,3 +29,15 @@ if you want to apply them then you can type `python3 manage.py sqlmigrate <app> 
 - [ ] profile view logout button login button clean up
 - [x] create user sign up site
 - [ ] research session timeout in django
+
+## generate a ssl cert with openssl
+
+```bash
+openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -sha256 -days 365
+```
+
+Run test server with SSL cert:
+
+```bash
+python manage.py runserver_plus --cert-file cert.pem --key-file key.pem
+```
