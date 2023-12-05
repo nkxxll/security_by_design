@@ -91,8 +91,6 @@ function add_stromzahler(stromzahler_id, auth_key) {
 
 dbConnection.db_connection.serialize(function () {
     let id_array = [];
-
-    console.log("resetting db")
     const commands = [
         `DROP DATABASE msb`,
         `CREATE TABLE Position_Stromzahler (
@@ -119,17 +117,6 @@ dbConnection.db_connection.serialize(function () {
             Uhrzeit INTEGER,
             FOREIGN KEY (StromzahlerID) REFERENCES Position_Stromzahler(StromzahlerID));`,
     ];
-    commands.forEach(function (command, index) {
-        dbConnection.db_connection.run(command, function (err) {
-            console.log("creating", command)
-            if (err) {
-                console.error(`Error executing command ${index + 1}: ${command}\n${err.message}`);
-            } else {
-                console.log(`Command ${index + 1} executed successfully: ${command}`);
-            }
-        });
-    });
-    console.log("db resetted")
     dbConnection.fill_id_key_realtion_db("testid", "testkey");
     add_verbrauch_for_stromzahler_test("testid");
     for (let i = 0; i < 100; i++) {
