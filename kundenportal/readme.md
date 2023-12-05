@@ -41,3 +41,8 @@ Run test server with SSL cert:
 ```bash
 python manage.py runserver_plus --cert-file cert.pem --key-file key.pem
 ```
+
+## Security headers
+
+[see here](https://docs.djangoproject.com/en/4.2/ref/middleware/) 
+
