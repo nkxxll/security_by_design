@@ -26,7 +26,11 @@ def index(request):
 
 def logout(request):
     lo(request)
-    return HttpResponseRedirect("/", request)
+    return render(request, "logout.html", {})
+
+
+def notfound(request):
+    return render(request, "404.html", {})
 
 
 @login_required(login_url="/login")

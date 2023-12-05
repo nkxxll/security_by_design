@@ -32,4 +32,5 @@ urlpatterns = [
     path("profile/", views.profile, name="profile"),
     path("edit/", views.edit, name="edit"),
     path("signup/", views.signup, name="signup"),
+    path("404/", views.notfound, name="notfound"),
 ]

@@ -24,6 +24,10 @@
 
     {% load crispy_forms_tags %}
 
+    {% block template %}
+    {% include "navbar.html" %}
+    {% endblock %}
+
     <!--Contact form-->
     <form method="post" action="{% url 'signup' %}">
         {% csrf_token %}
