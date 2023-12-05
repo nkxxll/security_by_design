@@ -29,14 +29,34 @@ def logout(request):
     return HttpResponseRedirect("/", request)
 
 
-@login_required
+@login_required(login_url="/login")
 def edit(request):
+    initial = {
+        "first_name": request.user.first_name,
+        "last_name": request.user.last_name,
+        "email": request.user.email,
+        "street": PowerData.objects.get(user=request.user).street,
+        "street_number": PowerData.objects.get(user=request.user).street_number,
+        "postal_code": PowerData.objects.get(user=request.user).postal_code,
+        "city": PowerData.objects.get(user=request.user).city,
+    }
     if request.method == "POST":
-        edit_data_form = CreateEditData(request.POST)
+        edit_data_form = CreateEditData(request.POST, initial=initial)
         if edit_data_form.is_valid():
-            # TODO:
             # update user data
-            return HttpResponseRedirect("profile", request)
+            request.user.first_name = edit_data_form.cleaned_data["first_name"]
+            request.user.last_name = edit_data_form.cleaned_data["last_name"]
+            request.user.email = edit_data_form.cleaned_data["email"]
+            # update meta data
+            power_data = PowerData.objects.get(user=request.user)
+            power_data.street = edit_data_form.cleaned_data["street"]
+            power_data.street_number = edit_data_form.cleaned_data["street_number"]
+            power_data.postal_code = edit_data_form.cleaned_data["postal_code"]
+            power_data.city = edit_data_form.cleaned_data["city"]
+            request.user.save()
+            power_data.save()
+            # update user data
+            return HttpResponseRedirect("/profile", request)
         else:
             # return form error
             return render(
@@ -45,7 +65,7 @@ def edit(request):
                 context={"edit_data_form": edit_data_form},
             )
     else:
-        edit_data_form = CreateEditData()
+        edit_data_form = CreateEditData(request.POST or None, initial=initial)
     return render(
         request, template_name="edit.html", context={"edit_data_form": edit_data_form}
     )
@@ -97,7 +117,7 @@ def signup(request):
     )
 
 
-@login_required
+@login_required(login_url="/login")
 def profile(request):
     context = dict()
     context["power_data"] = _get_powerdata(request.user, Period.YEAR)
