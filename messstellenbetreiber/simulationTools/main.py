@@ -14,16 +14,17 @@ class RandomDataGenerator:
     def __init__(self, _con) -> None:
         self._con = _con
 
-    def get_id_auth(self, id):
+    def get_id_auth(self, stromzahler_id):
         return self._con.execute(
-            "SELECT * FROM StromzahlerAuth WHERE StromzahlerID=?", (str(id),)
+            "SELECT * FROM StromzahlerAuth WHERE StromzahlerID=?",
+            (str(stromzahler_id),),
         ).fetchall()
 
     def generate_id(self):
-        id = 1
-        while self.get_id_auth(id) != []:
-            id = random.randint(2, 10000000000)
-        return id
+        stromzahler_id = 1
+        while self.get_id_auth(stromzahler_id) != []:
+            stromzahler_id = random.randint(2, 10000000000)
+        return stromzahler_id
 
     def get_auth_id(self, authkey):
         return self._con.execute(
@@ -66,7 +67,7 @@ class SimulationTooling:
     _con: sqlite3.Connection
     _random_data: RandomDataGenerator
     _test_object = {
-        "id": 1,
+        "stromzahler_id": 1,
         "key": "testkey",
         "location": {
             "street": "teststraße",
@@ -85,6 +86,12 @@ class SimulationTooling:
     def min_to_ms(self, minute: float) -> float:
         return minute * 60 * 1000
 
+    def s_timestamp_to_str(self, timestamp: int) -> str:
+        return datetime.date.fromtimestamp(timestamp / 1000).isoformat()
+
+    def ns_timestamp_to_str(self, timestamp: int) -> str:
+        return datetime.date.fromtimestamp(timestamp / 1000).isoformat()
+
     def delete_table(self, table_name):
         try:
             self._con.execute(f"DROP TABLE {table_name}")
@@ -92,6 +99,7 @@ class SimulationTooling:
             print(f"{table_name} already did not exist")
 
     def reset_db(self):
+        print("Resetting DB")
         self.delete_table("Position_Stromzahler")
         self.delete_table("StromzahlerAuth")
         self.delete_table("StromzahlerWartung")
@@ -128,39 +136,38 @@ class SimulationTooling:
                 FOREIGN KEY (StromzahlerID) REFERENCES Position_Stromzahler(StromzahlerID));"""
         )
         self._con.commit()
+        print("Resetted DB")
 
-    def add_stromzahler_auth(self, id, key):
+    def add_stromzahler_auth(self, stromzahler_id, key):
         self._con.execute(
             "INSERT INTO StromzahlerAuth (StromzahlerID, Auth_Key) VALUES (?, ?)",
-            (id, key),
+            (stromzahler_id, key),
         )
-        self._con.commit()
 
-    def add_stromzahler_location(self, id, street, number, postleitzahl, stadtname):
+    def add_stromzahler_location(
+        self, stromzahler_id, street, number, postleitzahl, stadtname
+    ):
         self._con.execute(
             "INSERT INTO Position_Stromzahler (StromzahlerID,Straße, Hausnummer, Postleitzahl, Stadtname) VALUES (?, ?, ?, ?, ?)",
-            (id, street, number, postleitzahl, stadtname),
+            (stromzahler_id, street, number, postleitzahl, stadtname),
         )
-        self._con.commit()
 
-    def add_stromzahler_verbrauch(self, id, gesamt, time):
+    def add_stromzahler_verbrauch(self, stromzahler_id, gesamt, time):
         self._con.execute(
             "INSERT INTO StromzahlerVerbrauch (StromzahlerID, StromverbrauchGesamt, Uhrzeit) VALUES (?, ?, ?)",
-            (id, gesamt, time),
+            (stromzahler_id, gesamt, time),
         )
-        self._con.commit()
 
     def add_stromzahler_wartung(
-        self, id, einbau_datum, eichungs_datum, letzes_wartungs_datum
+        self, stromzahler_id, einbau_datum, eichungs_datum, letzes_wartungs_datum
     ):
         self._con.execute(
             "INSERT INTO StromzahlerWartung (StromzahlerID,	Einbaudatum, letztesEichungsDatum, letzesWartungsDatum) VALUES (?, ?, ?, ?)",
-            (id, einbau_datum, eichungs_datum, letzes_wartungs_datum),
+            (stromzahler_id, einbau_datum, eichungs_datum, letzes_wartungs_datum),
         )
-        self._con.commit()
 
     def add_testcase_data(self):
-        testid = self._test_object["id"]
+        testid = self._test_object["stromzahler_id"]
         self.add_stromzahler_auth(testid, self._test_object["key"])
         loc_data = self._test_object["location"]
         self.add_stromzahler_location(
@@ -180,59 +187,77 @@ class SimulationTooling:
             self._test_object["all_dates"],
             self._test_object["all_dates"],
         )
+        self._con.commit()
 
     def add_random_stromzahler(self, amount: int):
         for i in range(amount):
-            id = self._random_data.generate_id()
+            # add authkey
+            stromzahler_id = self._random_data.generate_id()
             authkey = self._random_data.generate_authkey()
-            print(f"adding stromzahler id={id} ; auth={authkey}")
-            self.add_stromzahler_auth(id, authkey)
+            print(
+                f"adding stromzahler stromzahler_id={stromzahler_id} ; auth={authkey}"
+            )
+            self.add_stromzahler_auth(stromzahler_id, authkey)
+            # add random location
             random_position = self._random_data.generate_random_position()
             self.add_stromzahler_location(
-                id,
+                stromzahler_id,
                 random_position[0],
                 random_position[1],
                 random_position[2],
                 random_position[3],
             )
-            random_einbau = self._random_data.generate_random_date([1, 1, 2019])
-            random_wartung = self._random_data.generate_random_date()
-            self.add_stromzahler_wartung(
-                id, random_einbau, random_einbau, random_wartung
+            # add einbau und wartungs dates
+            random_einbau = int(
+                round(self._random_data.generate_random_date([1, 1, 2019]) * 1000)
             )
+            random_wartung = int(round(self._random_data.generate_random_date() * 1000))
+            if random_einbau > random_wartung:
+                random_wartung = random_einbau
+            self.add_stromzahler_wartung(
+                stromzahler_id, random_einbau, random_einbau, random_wartung
+            )
+            # add verbrauch
             now = int(round(time.time() * 1000))
             gesamt = 0
             step = math.ceil(self.min_to_ms(15))
-            start = math.ceil(now) - (step * 1000)
+            max_steps = 32600
+            start = math.ceil(now) - (step * max_steps)
             end = math.ceil(now)
+            if (end - random_einbau) / step < max_steps:
+                start = random_einbau
             print(
-                f"adding {(end-start)/step} entries from {datetime.date.fromtimestamp(start/1000).isoformat()} to {datetime.date.fromtimestamp(end/1000).isoformat()}"
+                f"adding {(end-start)/step} entries from {self.ns_timestamp_to_str(start)} to {self.ns_timestamp_to_str(end)}"
             )
-            # TODO: make this proper from eibnau date to now in dynamic steps to not have 10000000000 entries
             for i in range(start, end, step):
                 if i % self.min_to_ms(2000) <= step and debug_vebrauch:
                     print(
                         f"{int(((i-start) / (end-start))*100)}%, total entries: {math.ceil(now) - i / step}, step: {step}"
                     )
-                self.add_stromzahler_verbrauch(id, gesamt, i)
+                self.add_stromzahler_verbrauch(stromzahler_id, gesamt, i)
                 gesamt += random.randint(20, 800)
+            self._con.commit()
 
-    def get_stromzahler_data(self, id: int = 1, key: str = "testkey"):
+    def get_stromzahler_data(self, stromzahler_id: int = 1, key: str = "testkey"):
         output = {}
         select_output: list = self._con.execute(
-            "SELECT * FROM StromzahlerAuth WHERE StromzahlerID=?", (str(id),)
+            "SELECT * FROM StromzahlerAuth WHERE StromzahlerID=?",
+            (str(stromzahler_id),),
         ).fetchall()
         output["auth"] = select_output
         select_output: list = self._con.execute(
-            "SELECT * FROM Position_Stromzahler WHERE StromzahlerID=?", (str(id),)
+            "SELECT * FROM Position_Stromzahler WHERE StromzahlerID=?",
+            (str(stromzahler_id),),
         ).fetchall()
         output["position"] = select_output
         select_output: list = self._con.execute(
-            "SELECT * FROM StromzahlerWartung WHERE StromzahlerID=?", (str(id),)
+            "SELECT * FROM StromzahlerWartung WHERE StromzahlerID=?",
+            (str(stromzahler_id),),
         ).fetchall()
         output["wartung"] = select_output
         select_output: list = self._con.execute(
-            "SELECT * FROM StromzahlerVerbrauch WHERE StromzahlerID=?", (str(id),)
+            "SELECT * FROM StromzahlerVerbrauch WHERE StromzahlerID=?",
+            (str(stromzahler_id),),
         ).fetchall()
         output["verbrauch"] = select_output
         return output
