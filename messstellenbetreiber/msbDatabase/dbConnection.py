@@ -33,7 +33,7 @@ class DbConnector:
             """SELECT StromverbrauchGesamt, Uhrzeit
                 FROM StromzahlerVerbrauch
                 WHERE StromzahlerID = ?
-                  AND Uhrzeit > ? AND Uhrzeit < ?""",
+                  AND Uhrzeit >= ? AND Uhrzeit <= ?""",
             (stromzahler_id, start_timestamp, end_timestamp),
         ).fetchall()
         return select_output

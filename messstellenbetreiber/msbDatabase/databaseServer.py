@@ -24,7 +24,7 @@ PORT = 3000
 
 
 class HTTPCodes(Enum):
-    DEFAULT = 202
+    DEFAULT = 200
     NOT_ALLOWED = 404
 
 
@@ -38,6 +38,14 @@ def convert_verbrauch_data_to_response(data: list[tuple]):
     for row in data:
         result.append({row[1]: row[0]})
     return result
+
+
+def date_to_timestamp(year: str, month: str = 1, day: str = 1) -> int:
+    if int(year) < 1971:
+        return 0
+    return int(
+        round(time.mktime(time.strptime(f"{year}-{month}-{day}", "%Y-%m-%d")) * 1000)
+    )
 
 
 @app.route("/", methods=["GET"])
@@ -82,7 +90,7 @@ def show_verbrauch_year(year):
     else:
         auth_key = request.cookies.get("auth_key")
         stromzahler_id = db.get_stromzahler_id_from_auth_key(auth_key)
-        start_time = year
+        start_time = date_to_timestamp(year)
         end_time = time.time()
         data = db.get_stromverbrauch_in_timeframe(stromzahler_id, start_time, end_time)
         response_message = convert_verbrauch_data_to_response(data)
