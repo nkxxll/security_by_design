@@ -70,8 +70,6 @@ function add_verbrauch_for_stromzahler_test(stromzahlerID) {
 }
 
 
-
-
 function add_stromzahler(stromzahler_id, auth_key) {
     console.log("creating new stromzahler", id, "with auth key:", key)
     dbConnection.fill_location_db(id);
