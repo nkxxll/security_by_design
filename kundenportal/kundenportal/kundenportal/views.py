@@ -1,4 +1,6 @@
 from json import loads
+from typing import Tuple
+from logging import getLogger
 from django.contrib.admin.options import HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib.auth import logout as lo
@@ -6,18 +8,18 @@ from django.contrib.auth.decorators import login_required
 from datetime import datetime
 from django.contrib.auth.models import User
 from power_data.models import PowerData
+# this is for the power data validation
+from jsonschema import validate, ValidationError
 import requests
 
 from .utils.forms import CreateUserForm, CreateUserMeta, CreateEditData
 
+LOGGER = getLogger(__name__)
 
-class Period:
-    YEAR = "year"
-    MONTH = "month"
-
-
-# TODO not sure if this is the right url
-MSB_API_URL = "http://localhost:8000/stromdaten"
+MSB_PORT = 3000
+MSB_HOST = "localhost"
+MSB_API_ROUTE = "api/v1/stromverbrauch"
+MSB_API_URL = f"http://localhost:{3000}/{MSB_API_ROUTE}"
 
 
 def index(request):
@@ -124,24 +126,19 @@ def signup(request):
 @login_required(login_url="/login")
 def profile(request):
     context = dict()
-    context["power_data"] = _get_powerdata(request.user, Period.YEAR)
+    context["power_data"] = _get_powerdata(request.user, (0, 0))
     return render(request, "profile.html", context)
 
 
 def _get_powerdata(
     user: User,
-    period: str,
-    year: int = datetime.now().year,
-    month: int = datetime.now().month,
+    period: Tuple[int, int],
+    year: int | None = None,
 ) -> dict:
     """get all user power data for a specific user and time period
 
     Gets all power data for a user for a specific period. The period can be a year or a month.
     The data is fetched from the msb api and returned as a dict.
-
-    TODO: what format should the data be in?
-    TODO: how should i handle the time period specifications for the power data
-    which options should be there?
 
     Args:
         user (User): user to get data for
@@ -149,13 +146,41 @@ def _get_powerdata(
         year (int, optional): year to get data for. Defaults to datetime.now().year.
         month (int, optional): month to get data for. Defaults to datetime.now().month.
     Returns:
-        dict: list of power data for user
+        dict: list of power data for user, the dict is empty if there is no data or an error occurred
     """
-    session = requests.Session()
-    cookies = {"key": PowerData.objects.get(user=user).auth_key}
+    data = dict() # data that is returned
+    # requests session
+    session = requests.Session()  
+    cookies = {"authkey": PowerData.objects.get(user=user).auth_key}
     session.cookies.update(cookies)
-    # TODO finish this url part with period and year and month
-    response = session.get(f"MSB_API_URL/{year}/{month}")
-    # TODO check if the json data needs to be cleaned up
+
+    # build request URL
+    request_url_str = ""
+    if period == (0, 0):
+        # current year
+        request_url_str = MSB_API_URL
+    elif year is None:
+        # current month
+        request_url_str = f"MSB_API_URL/{period[0]}/{period[1]}"
+    elif year is not None:
+        # specific year
+        request_url_str = f"MSB_API_URL/{year}"
+    else:
+        # this is not good
+        return dict()
+
+    # validate the JSON response
+    response = session.get(request_url_str)
+    if response.status_code != 200:
+        return dict()
+    response.json()
+
+    data = loads(response.json())
     # TODO validate the json data
-    return loads(response.json())
+    # try:
+    #     validate(data, SCHEMA)
+    # except ValidationError as e:
+    #     LOGGER.error(e)
+    #     return dict()
+
+    return data
