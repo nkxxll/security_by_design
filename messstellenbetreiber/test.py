@@ -2,17 +2,24 @@ import unittest
 from requests.cookies import RequestsCookieJar
 from requests import get
 
+import messstellenbetreiber.msbDatabase.databaseServer as DatabaseServer
 
-class Unittest(unittest.TestCase):
-    def all_existing_data(self):
+API_ROUTES = DatabaseServer.APIRoutes
+
+
+class DBServerTests(unittest.TestCase):
+    def do_request(self, route: str) -> dict:
         cookies: RequestsCookieJar = RequestsCookieJar()
         cookies.set("auth_key", "testkey")
-        db_output = 
-        data = get( 
-            "http://localhost:3000/api/v1/stromverbrauch/read_Stromverbrauch_all",
+        return get(
+            "http://localhost:3000" + route,
             cookies=cookies,
-        )
-        self.assertEqual(data, db_output)
+        ).json()
+
+    def all_existing_data(self):
+        data = self.do_request(API_ROUTES.ALL_STROMVERBRAUCH.value)
+        print(data)
+        self.assertEqual(data, "db_output")
 
     def data_period(self):
         self.assertTrue(True)

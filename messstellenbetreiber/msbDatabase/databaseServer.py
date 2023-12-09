@@ -5,7 +5,7 @@ import time
 from enum import Enum
 from flask import Flask, request
 
-from dbConnection import DbConnector
+from messstellenbetreiber.msbDatabase.dbConnection import DbConnector
 
 # add log-file
 logging.basicConfig(
@@ -18,9 +18,15 @@ logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stderr))
 
 app = Flask(__name__)
 
-API_ROUTE = "/api/v1/"
 HOST = "localhost"
 PORT = 3000
+
+
+class APIRoutes(Enum):
+    API_ROUTE = "/api/v1/"
+    ALL_STROMVERBRAUCH = API_ROUTE + "stromverbrauch"
+    YEARLY_STROMVERBRAUCH = API_ROUTE + "stromverbrauch/<year>"
+    TIMEFRAME_STROMVERBRAUCH = API_ROUTE + "stromverbrauch/<start_time>/<end_time>"
 
 
 class HTTPCodes(Enum):
@@ -53,7 +59,7 @@ def index():
     return "Hello th the server"
 
 
-@app.route(API_ROUTE, methods=["GET"])
+@app.route(APIRoutes.API_ROUTE.value, methods=["GET"])
 def api_index():
     return "Hello to The API"
 
@@ -63,7 +69,7 @@ def not_found(error):
     return "Not allowed", 404
 
 
-@app.route(API_ROUTE + "stromverbrauch", methods=["GET"])
+@app.route(APIRoutes.ALL_STROMVERBRAUCH.value, methods=["GET"])
 def show_verbrauch_all():
     response_message = "not implemented"
     response_code = HTTPCodes.DEFAULT
@@ -79,7 +85,7 @@ def show_verbrauch_all():
     return response_message, response_code.value
 
 
-@app.route(API_ROUTE + "stromverbrauch/<year>", methods=["GET"])
+@app.route(APIRoutes.YEARLY_STROMVERBRAUCH.value, methods=["GET"])
 def show_verbrauch_year(year):
     response_message = "not implemented"
     response_code = HTTPCodes.DEFAULT
@@ -97,7 +103,7 @@ def show_verbrauch_year(year):
     return response_message, response_code.value
 
 
-@app.route(API_ROUTE + "stromverbrauch/<start_time>/<end_time>", methods=["GET"])
+@app.route(APIRoutes.TIMEFRAME_STROMVERBRAUCH.value, methods=["GET"])
 def show_verbrauch_timeframe(start_time, end_time):
     response_message = "not implemented"
     response_code = HTTPCodes.DEFAULT
