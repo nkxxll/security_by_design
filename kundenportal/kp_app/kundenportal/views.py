@@ -45,15 +45,18 @@ MSB_API_URL = f"http://{MSB_HOST}:{MSB_PORT}/{MSB_API_ROUTE}"
 
 
 def index(request):
+    LOGGER.info(f"index - Index page was requested by id: {request.user.id}")
     return render(request, "index.html", {})
 
 
 def logout(request):
     lo(request)
+    LOGGER.info(f"logout - User with the id: {request.user.id} logged out")
     return render(request, "logout.html", {})
 
 
 def notfound(request):
+    LOGGER.info(f"notfound - 404 page was requested by user with id: {request.user.id}")
     return render(request, "404.html", {})
 
 
@@ -87,16 +90,19 @@ def edit(request):
                 power_data.auth_key = edit_data_form.cleaned_data["auth_key"]
             request.user.save()
             power_data.save()
+            LOGGER.info(f"edit - User with the id: {request.user.id} edited his data")
             # update user data
             return HttpResponseRedirect("/profile", request)
         else:
             # return form error
+            LOGGER.error(f"edit - User with the id: {request.user.id} failed to edit his data error: {edit_data_form.errors}")
             return render(
                 request,
                 template_name="edit.html",
                 context={"edit_data_form": edit_data_form},
             )
     else:
+        LOGGER.info(f"edit - User with the id: {request.user.id} requested the edit page")
         edit_data_form = CreateEditData(request.POST or None, initial=initial)
     return render(
         request, template_name="edit.html", context={"edit_data_form": edit_data_form}
@@ -131,9 +137,11 @@ def signup(request):
             # when we have the new user created and all the data set up we want to log this user in
             request.user = user
             lo(request)
+            LOGGER.info(f"signup - User with the id: {request.user.id} signed up")
             return HttpResponseRedirect("/profile", request)
         else:
             # return form error
+            LOGGER.error(f"signup - User with the id: {request.user.id} failed to sign up error:\n\tuser_data: {user_form.errors}\n\tmeta_data: {data_form.errors}")
             return render(
                 request,
                 template_name="signup.html",
@@ -142,6 +150,7 @@ def signup(request):
     else:
         user_form = CreateUserForm()
         data_form = CreateUserMeta()
+        LOGGER.info(f"signup - User with the id: {request.user.id} requested the signup page")
     return render(
         request,
         template_name="signup.html",
@@ -162,6 +171,7 @@ def profile(request):
     LOGGER.debug(context["power_data"])
     user_data = PowerData.objects.get(user=request.user)
     context["user_data"] = user_data
+    LOGGER.info(f"profile - User with the id: {request.user.id} requested the profile page")
     return render(request, "profile.html", context)
 
 
@@ -206,7 +216,7 @@ def _get_powerdata(
         )
         return dict()
 
-    LOGGER.debug(f"Profile -- Request url: {request_url_str}")
+    LOGGER.info(f"_get_powerdata -- Request url: {request_url_str}")
 
     # validate the JSON response
     response = session.get(request_url_str)
@@ -219,8 +229,9 @@ def _get_powerdata(
     # TODO validate the json data
     try:
         validate(data, SCHEMA)
+        LOGGER.info("_get_powerdata - Power data validated successfully")
     except ValidationError as e:
-        LOGGER.error(e)
+        LOGGER.error(f"_get_powerdata - Error while validating power data: {e}")
         return dict()
 
     return data
