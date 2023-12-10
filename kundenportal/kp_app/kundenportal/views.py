@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.contrib.auth import logout as lo
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from jsonschema import validate, ValidationError
 from power_data.models import PowerData
 
 # this is for the power data validation
@@ -13,6 +14,29 @@ import requests
 from .utils.forms import CreateUserForm, CreateUserMeta, CreateEditData
 
 LOGGER = getLogger(__name__)
+SCHEMA = {
+    "definitions": {},
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://example.com/object1702208133.json",
+    "title": "Root",
+    "type": "array",
+    "default": [],
+    "items": {
+        "$id": "#root/items",
+        "title": "Items",
+        "type": "object",
+        "required": [],
+        "properties": {
+            "0": {
+                "$id": "#root/items/0",
+                "title": "0",
+                "type": "integer",
+                "examples": [15],
+                "default": 0,
+            }
+        },
+    },
+}
 
 MSB_PORT = 3000
 MSB_HOST = "localhost"
@@ -127,7 +151,9 @@ def profile(request):
     power_data = dict()
     power_data["stromverbrauch"] = _get_powerdata(request.user, ("", ""))
     power_data["stromverbrauch_23"] = _get_powerdata(request.user, ("", ""), year=2023)
-    power_data["stromverbrauch_q423"] = _get_powerdata(request.user, ("2023-10-01", "2023-12-31"))
+    power_data["stromverbrauch_q423"] = _get_powerdata(
+        request.user, ("2023-10-01", "2023-12-31")
+    )
     context["power_data"] = power_data
     LOGGER.debug(context["power_data"])
     return render(request, "profile.html", context)
@@ -185,10 +211,10 @@ def _get_powerdata(
 
     data = response.json()
     # TODO validate the json data
-    # try:
-    #     validate(data, SCHEMA)
-    # except ValidationError as e:
-    #     LOGGER.error(e)
-    #     return dict()
+    try:
+        validate(data, SCHEMA)
+    except ValidationError as e:
+        LOGGER.error(e)
+        return dict()
 
     return data
