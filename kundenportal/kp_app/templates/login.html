@@ -6,8 +6,13 @@
       <!--Bootstrap CSS-->
       <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     </head>
-    <body style="background-color: #1a9988ff">
 
+    <style>
+    body {
+      background: url('https://www.vku.de/fileadmin/_processed_/f/b/csm_Sparte_Energie__lassedesignen_Adobe_3d61a88b57.jpeg') center/cover fixed no-repeat;
+    }
+    </style>
+    
     {% load crispy_forms_tags %}
     
     {% block template %}
@@ -32,23 +37,23 @@
             </div>
           </div>
           {% if form.errors %}
-          <p style="color: red; font-family: Trebuchet MS;">
+          <p style="color: red">
             Your username and password didn't match. Please try again.
           </p>
           {% endif %}
           {% if next %}
               {% if user.is_authenticated %}
-              <p style="color: red; font-family: Trebuchet MS;">
+              <p style="color: red">
                 Your account doesn't have access to this page. To proceed,
                 please login with an account that has access.
               </p>
               {% else %}
-              <p style="color: red; font-family: Trebuchet MS;">
+              <p style="color: red">
                 Please login to see this page.
               </p>
               {% endif %}
           {% endif %}
-          <p style="font-family: Trebuchet MS;">
+          <p>
             You are currently logged in as {{ user }}.
           </p>
           <input type="submit" value="Login" style="box-shadow: 0 5px 10px rgba(0,0,0,0.2); margin-top: 20px; position: relative; left: 50%; -ms-transform: translateX(-50%); transform: translateX(-50%); background-color: #1a9988ff; border: none; border-radius: 12px; font-family:Trebuchet MS; color: white; padding: 7px 50px; text-align: center; display: inline-block; font-size: 16px;" />

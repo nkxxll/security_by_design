@@ -19,6 +19,9 @@
           <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
             class="rounded-circle img-fluid" style="width: 200px;">
           <h5 class="my-3">{{ user.first_name }}  {{ user.last_name }}</h5>
+          <div class="d-flex justify-content-center">
+            <a class="nav-link" style="box-shadow: 0 5px 10px rgba(0,0,0,0.2); margin-bottom: 20px; position: absolute; left: 50%; -ms-transform: translateX(-50%); transform: translateX(-50%); background-color: #1a9988ff; border: none; border-radius: 12px; font-family:Trebuchet MS; color: white; padding: 7px 50px; text-align: center; display: inline-block; font-size: 16px;" href="/edit">Edit Profile</a>
+          </div>
         </div>
       </div>
 
@@ -47,7 +50,7 @@
               <p class="mb-0">Contract</p>
             </div>
             <div class="col-sm-9">
-              <p class="text-muted mb-0">{{ form.contract }}</p>
+              <p class="text-muted mb-0">{{ user_data.contract }}</p>
             </div>
           </div>
           <hr>
@@ -56,26 +59,58 @@
               <p class="mb-0">Address</p>
             </div>
             <div class="col-sm-9">
-              <p class="text-muted mb-0">{{ user_data.street }}  {{ form.street_number }}, {{ form.postal_code }} {{ form.city }}</p>
+              <p class="text-muted mb-0">{{ user_data.street }}  {{ user_data.street_number }}</p>
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-3">
+              <p class="mb-0">Postal code</p>
+            </div>
+            <div class="col-sm-9">
+              <p class="text-muted mb-0">{{ user_data.postal_code }}</p>
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-3">
+              <p class="mb-0">City</p>
+            </div>
+            <div class="col-sm-9">
+              <p class="text-muted mb-0">{{ user_data.city }}</p>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="Wrapper" style="background-color: white; margin-top: 50px; margin-bottom: 50px; position: relative; left: 50%; -ms-transform: translateX(-50%); transform: translateX(-50%); max-width: 1000px; width: 100%; padding: 34px; border-radius: 6px; box-shadow: 0 5px 10px rgba(0,0,0,0.2);">    
-      <div class="d-flex flex-row" style="font-family:Trebuchet MS; font-weight: 600; font-size: 30">        
-        <div class="col-lg-4">
-          <img src="https://static.vecteezy.com/ti/gratis-vektor/t2/2534006-social-media-chatting-online-leeres-profil-bild-kopf-und-korper-symbol-menschen-stehend-symbol-grauer-hintergrund-kostenlos-vektor.jpg" alt="Bootstrap" width="200" height="200" style="border-radius: 6px;">
-        </div>  
-        <div class="col-lg-8">
-          User: {{ user.first_name }}  {{ user.last_name }}
+    <div class="bg-body-tertiary" style="background-color: white; margin-top: 30px; margin-left: 3%; width: 94%; border-radius: 6px; box-shadow: 0 5px 10px rgba(0,0,0,0.2);">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-sm-3">
+            <p class="mb-0">Date</p>
+          </div>
+          <div class="col-sm-9">
+            <p class="text-muted mb-0" id="date"></p>
+          </div>
         </div>
-        <div class="form-row">
-          <div class="col-lg-8">
-            Time: current
-            power_data: {{ power_data }}
-          </div>            
+        <hr>
+        <div class="row">
+          <div class="col-sm-3">
+            <p class="mb-0">Time</p>
+          </div>
+          <div class="col-sm-9">
+            <p class="text-muted mb-0" id="time"></p>
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-sm-3">
+            <p class="mb-0">Power consumption</p>
+          </div>
+          <div class="col-sm-9">
+            <p class="text-muted mb-0">{{ power_data }}</p>
+          </div>
         </div>
       </div>
     </div>
@@ -86,3 +121,21 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
   </body>
 </html>
+
+<script>
+  // Get current date and time
+  var now = new Date();
+  var datetime = now.toLocaleDateString();
+
+  // Insert date and time into HTML
+  document.getElementById("date").innerHTML = datetime;
+</script>
+
+<script>
+  // Get current date and time
+  var now = new Date();
+  var datetime = now.toLocaleTimeString();
+
+  // Insert date and time into HTML
+  document.getElementById("time").innerHTML = datetime;
+</script>
