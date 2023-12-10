@@ -37,7 +37,7 @@ class RandomDataGenerator:
         letters += ",.-_+*#!$%&"
         authkey = "testkey"
         while self.get_auth_id(authkey) != []:
-            authkey = "".join(random.choice(letters) for i in range(18))
+            authkey = "".join(random.choice(letters) for i in range(20))
         return authkey
 
     def generate_random_position(self):
@@ -68,7 +68,7 @@ class SimulationTooling:
     _random_data: RandomDataGenerator
     _test_object = {
         "stromzahler_id": 1,
-        "key": "testkey",
+        "key": "testtesttesttesttest",
         "location": {
             "street": "teststraße",
             "number": 1,
