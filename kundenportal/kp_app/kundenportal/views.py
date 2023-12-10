@@ -75,12 +75,16 @@ def edit(request):
             request.user.first_name = edit_data_form.cleaned_data["first_name"]
             request.user.last_name = edit_data_form.cleaned_data["last_name"]
             request.user.email = edit_data_form.cleaned_data["email"]
+            if edit_data_form.cleaned_data["password"] != "":
+                request.user.set_password(edit_data_form.cleaned_data["password"])
             # update meta data
             power_data = PowerData.objects.get(user=request.user)
             power_data.street = edit_data_form.cleaned_data["street"]
             power_data.street_number = edit_data_form.cleaned_data["street_number"]
             power_data.postal_code = edit_data_form.cleaned_data["postal_code"]
             power_data.city = edit_data_form.cleaned_data["city"]
+            if edit_data_form.cleaned_data["auth_key"] != "":
+                power_data.auth_key = edit_data_form.cleaned_data["auth_key"]
             request.user.save()
             power_data.save()
             # update user data
