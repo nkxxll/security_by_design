@@ -13,6 +13,7 @@ class APIRoutes(Enum):
     ALL_STROMVERBRAUCH = API_ROUTE + "stromverbrauch"
     YEARLY_STROMVERBRAUCH = API_ROUTE + "stromverbrauch/<year>"
     TIMEFRAME_STROMVERBRAUCH = API_ROUTE + "stromverbrauch/<start_time>/<end_time>"
+    UPDATE_LOCATION = API_ROUTE + "location"
 
 
 class HTTPCodes(Enum):
@@ -121,6 +122,37 @@ class DatabaseServer:
                 auth_key = request.cookies.get("auth_key")
                 stromzahler_id = db.get_stromzahler_id_from_auth_key(auth_key)
                 try:
+                    start_time_dict = start_time.split("-")
+                    start_time = date_to_timestamp(
+                        start_time_dict[0], start_time_dict[1], start_time_dict[2]
+                    )
+                    end_time_dict = end_time.split("-")
+                    end_time = date_to_timestamp(
+                        end_time_dict[0], end_time_dict[1], end_time_dict[2]
+                    )
+                except ValueError:
+                    # this handles a non integer input
+                    response_message = self.NOT_ALLOWED_MESSAGE
+                    response_code = HTTPCodes.NOT_ALLOWED
+                    return response_message, response_code.value
+                data = db.get_stromverbrauch_in_timeframe(
+                    stromzahler_id, start_time, end_time
+                )
+                response_message = convert_verbrauch_data_to_response(data)
+            return response_message, response_code.value
+
+        @self.app.route(APIRoutes.UPDATE_LOCATION.value, methods=["POST"])
+        def show_verbrauch_timeframe():
+            response_message = "not implemented"
+            response_code = HTTPCodes.DEFAULT
+            db: DbConnector = DbConnector(self.sqlite_file)
+            if not db.does_auth_key_exist(request.cookies.get("auth_key")):
+                response_message = self.NOT_ALLOWED_MESSAGE
+                response_code = HTTPCodes.NOT_ALLOWED
+            else:
+                auth_key = request.cookies.get("auth_key")
+                stromzahler_id = db.get_stromzahler_id_from_auth_key(auth_key)
+                try:
                     start_time = int(start_time)
                     end_time = int(end_time)
                 except ValueError:
@@ -132,6 +164,7 @@ class DatabaseServer:
                     stromzahler_id, start_time, end_time
                 )
                 response_message = convert_verbrauch_data_to_response(data)
+            response_message = "not implemented"
             return response_message, response_code.value
 
     def start_server(self):
