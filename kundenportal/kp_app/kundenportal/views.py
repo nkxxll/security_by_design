@@ -127,6 +127,7 @@ def signup(request):
 def profile(request):
     context = dict()
     context["power_data"] = _get_powerdata(request.user, (0, 0))
+    LOGGER.debug(context["power_data"])
     return render(request, "profile.html", context)
 
 
@@ -151,7 +152,7 @@ def _get_powerdata(
     data = dict() # data that is returned
     # requests session
     session = requests.Session()  
-    cookies = {"authkey": PowerData.objects.get(user=user).auth_key}
+    cookies = {"auth_key": PowerData.objects.get(user=user).auth_key}
     session.cookies.update(cookies)
 
     # build request URL
@@ -172,10 +173,11 @@ def _get_powerdata(
     # validate the JSON response
     response = session.get(request_url_str)
     if response.status_code != 200:
+        LOGGER.error(f"Error while fetching power data: {response.status_code}")
         return dict()
     response.json()
 
-    data = loads(response.json())
+    data = response.json()
     # TODO validate the json data
     # try:
     #     validate(data, SCHEMA)
