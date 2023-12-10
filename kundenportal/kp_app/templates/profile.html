@@ -12,14 +12,73 @@
     {% block template %}
     {% include "navbar.html" %}
     {% endblock %}
-    profile
 
-    User: {{ user.first_name }}  {{ user.last_name }}
-    </br>
+    <div class="form-row">
+      <div class="col-lg-4" class="card mb-4" style="background-color: white; margin-top: 30px; left: 3%; border-radius: 6px; box-shadow: 0 5px 10px rgba(0,0,0,0.2);">
+        <div class="card-body text-center">
+          <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
+            class="rounded-circle img-fluid" style="width: 200px;">
+          <h5 class="my-3">{{ user.first_name }}  {{ user.last_name }}</h5>
+        </div>
+      </div>
 
-    Time: current
-    </br>
-    power_data: {{ power_data }}
+      <div class="col-lg-7" style="background-color: white; margin-top: 30px; left: 5%; border-radius: 6px; box-shadow: 0 5px 10px rgba(0,0,0,0.2);">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-sm-3">
+              <p class="mb-0">Full Name</p>
+            </div>
+            <div class="col-sm-9">
+              <p class="text-muted mb-0">{{ user.first_name }}  {{ user.last_name }}</p>
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-3">
+              <p class="mb-0">E-Mail</p>
+            </div>
+            <div class="col-sm-9">
+              <p class="text-muted mb-0">{{ user.email }}</p>
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-3">
+              <p class="mb-0">Contract</p>
+            </div>
+            <div class="col-sm-9">
+              <p class="text-muted mb-0">{{ form.contract }}</p>
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-3">
+              <p class="mb-0">Address</p>
+            </div>
+            <div class="col-sm-9">
+              <p class="text-muted mb-0">{{ user_data.street }}  {{ form.street_number }}, {{ form.postal_code }} {{ form.city }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="Wrapper" style="background-color: white; margin-top: 50px; margin-bottom: 50px; position: relative; left: 50%; -ms-transform: translateX(-50%); transform: translateX(-50%); max-width: 1000px; width: 100%; padding: 34px; border-radius: 6px; box-shadow: 0 5px 10px rgba(0,0,0,0.2);">    
+      <div class="d-flex flex-row" style="font-family:Trebuchet MS; font-weight: 600; font-size: 30">        
+        <div class="col-lg-4">
+          <img src="https://static.vecteezy.com/ti/gratis-vektor/t2/2534006-social-media-chatting-online-leeres-profil-bild-kopf-und-korper-symbol-menschen-stehend-symbol-grauer-hintergrund-kostenlos-vektor.jpg" alt="Bootstrap" width="200" height="200" style="border-radius: 6px;">
+        </div>  
+        <div class="col-lg-8">
+          User: {{ user.first_name }}  {{ user.last_name }}
+        </div>
+        <div class="form-row">
+          <div class="col-lg-8">
+            Time: current
+            power_data: {{ power_data }}
+          </div>            
+        </div>
+      </div>
+    </div>
     
     <!-- Optional Javascript -->
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
