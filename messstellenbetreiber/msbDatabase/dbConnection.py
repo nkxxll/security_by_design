@@ -2,14 +2,12 @@ import logging
 import json
 import sqlite3
 
-DB_FILE = "./msb.db"
-
 
 class DbConnector:
     _con: sqlite3.Connection
 
-    def __init__(self) -> None:
-        self._con = sqlite3.connect(DB_FILE)
+    def __init__(self, sqlite_file: str = "./msb.db") -> None:
+        self._con = sqlite3.connect(sqlite_file)
 
     def does_auth_key_exist(self, auth_key: str) -> bool:
         output = self.get_auth_key_data(auth_key)

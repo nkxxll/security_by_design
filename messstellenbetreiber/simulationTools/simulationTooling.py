@@ -5,7 +5,7 @@ import datetime
 import string
 import math
 
-import random_data
+import messstellenbetreiber.simulationTools.random_data as random_data
 
 
 class RandomDataGenerator:
@@ -79,8 +79,11 @@ class SimulationTooling:
         "all_dates": 10000,
     }
 
-    def __init__(self) -> None:
-        self._con = sqlite3.connect("./..\\msbDatabase\\msb.db")
+    def __init__(
+        self, sqlite_file: str = "./..\\msbDatabase\\msb.db", debug_vebrauch=False
+    ) -> None:
+        self.debug_vebrauch = debug_vebrauch
+        self._con = sqlite3.connect(sqlite_file)
         self._random_data = RandomDataGenerator(self._con)
 
     def min_to_ms(self, minute: float) -> float:
@@ -230,7 +233,7 @@ class SimulationTooling:
                 f"adding {(end-start)/step} entries from {self.ns_timestamp_to_str(start)} to {self.ns_timestamp_to_str(end)}"
             )
             for i in range(start, end, step):
-                if i % self.min_to_ms(2000) <= step and debug_vebrauch:
+                if i % self.min_to_ms(2000) <= step and self.debug_vebrauch:
                     print(
                         f"{int(((i-start) / (end-start))*100)}%, total entries: {math.ceil(now) - i / step}, step: {step}"
                     )
@@ -261,17 +264,3 @@ class SimulationTooling:
         ).fetchall()
         output["verbrauch"] = select_output
         return output
-
-
-debug_vebrauch = False
-
-
-def __main__():
-    tools: SimulationTooling = SimulationTooling()
-    tools.reset_db()
-    tools.add_testcase_data()
-    tools.add_random_stromzahler(8)
-
-
-if __name__ == "__main__":
-    __main__()
