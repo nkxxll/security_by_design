@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from os import path
 from pathlib import Path
+from django.core.management.utils import get_random_secret_key
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,11 +24,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "django-insecure-$9v_e0v&$riaxz8fd!ndu7=tcf^^(6pshitfje7l^=#_g)+q1%"
+SECRET_KEY = get_random_secret_key()
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["localhost"]
 
 
 # Application definition
@@ -133,3 +136,11 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Security
+SECURE_HSTS_SECONDS = 0 # NOTE: this is a low value for testing can be higher in production
+SECURE_HSTS_INCLUDE_SUBDOMAINS = False # this should be set to true in production
+SECURE_HSTS_PRELOAD = False # this should be set to true in production
+SECURE_SSL_REDIRECT =  False # this should be set to true in production
+SESSION_COOKIE_SECURE = False # this should be set to true
+CSRF_COOKIE_SECURE = False # this should be set to true
