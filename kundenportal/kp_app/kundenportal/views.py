@@ -156,6 +156,8 @@ def profile(request):
     )
     context["power_data"] = power_data
     LOGGER.debug(context["power_data"])
+    user_data = PowerData.objects.get(user=request.user)
+    context["user_data"] = user_data
     return render(request, "profile.html", context)
 
 
