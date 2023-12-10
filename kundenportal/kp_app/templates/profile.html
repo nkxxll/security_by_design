@@ -4,6 +4,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <!--Bootstrap CSS-->
+      <script src="https://www.gstatic.com/charts/loader.js"></script>
       <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     </head>
     <body style="background-color: #1a9988ff">
@@ -51,6 +52,7 @@
             </div>
             <div class="col-sm-9">
               <p class="text-muted mb-0">{{ user_data.contract }}</p>
+                
             </div>
           </div>
           <hr>
@@ -109,7 +111,8 @@
             <p class="mb-0">Power consumption</p>
           </div>
           <div class="col-sm-9">
-            <p class="text-muted mb-0">{{ power_data }}</p>
+            <!-- <p class="text-muted mb-0">{{ power_data }}</p> -->
+            <div id="myChart" style="width:100%; max-width:600px; height:500px;"></div>
           </div>
         </div>
       </div>
@@ -119,6 +122,38 @@
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script>
+    google.charts.load('current',{packages:['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+
+    var datalist = [ // define list with machine positions
+    {% for data in power_data %} // use django templates to interact with the passed context
+      data, // I don't know what your Machine class looks like, but you get the idea
+    {% endfor %}
+    ];
+
+    function drawChart() {
+      console.log(datalist)
+
+    // Set Data
+    const data = google.visualization.arrayToDataTable(
+      datalist
+    );
+
+    // Set Options
+    const options = {
+      title: 'House Prices vs. Size',
+      hAxis: {title: 'Square Meters'},
+      vAxis: {title: 'Price in Millions'},
+      legend: 'none'
+    };
+
+    // Draw
+    const chart = new google.visualization.LineChart(document.getElementById('myChart'));
+    chart.draw(data, options);
+
+    }
+    </script>
   </body>
 </html>
 

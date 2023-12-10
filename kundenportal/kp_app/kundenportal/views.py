@@ -158,6 +158,17 @@ def profile(request):
     LOGGER.debug(context["power_data"])
     user_data = PowerData.objects.get(user=request.user)
     context["user_data"] = user_data
+
+    dictionary = [{'a': 1}, {'b': 2}, {'c': 3}]
+    a: list[list[Any]] = []
+
+    for value in power_data["stromverbrauch"]:
+        for key, value in value.items():
+            a.append([int(key), value])
+
+    context["power_data"] = a
+    LOGGER.info(f'{context["power_data"]}')
+
     return render(request, "profile.html", context)
 
 
