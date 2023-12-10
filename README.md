@@ -24,6 +24,8 @@ cd ./kundenportal/kp_app/
 python3 manage.py migrate
 ```
 
+Then run the server with this command (in dev mode).
+
 ```bash
 bash -c run.sh
 # or
@@ -41,14 +43,19 @@ openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -sha256 -days 3
 # you should normally not do that; just for the presentation of the project here)
 openssl rsa -in key.pem -out easy_key.pem
 ```
+Now move the `easy_key.pem` and `cert.pem` file into the `kp_app` dir.
 
 Please keep in mind that the key is not signed and you browser will warn you about that.
 You could sign the key with the help of [Let's Encrypt](https://letsencrypt.org/).
 
-2. Edit the settings for the Django server to be secure.
+2. Edit the settings for the Django server to be secure. To do that navigate
+   with the editor of choice to the `settings.py` file in the location
+   `./kundenportal/kp_app/kundenportal/settings.py` and change the following constants.
 
 ```python
-DEBUG = False
+DEBUG = False # this should be false in production
+# here you would find the address of the Messstellenbetreiber Server in this
+# case the server is running on the same system hence "localhost"
 ALLOWED_HOSTS = [".localhost", "127.0.0.1", "[::1]"]
 # ...
 # === Security Settings ===
@@ -66,7 +73,7 @@ CSRF_COOKIE_SECURE = True # this should be set to true
 
 [What are those settins](https://docs.djangoproject.com/en/5.0/topics/security/)
 
-3. move the `easy_key.pem` and `cert.pem` file into the `kp_app` dir
+3. Start the server with [gunicorn](https://gunicorn.org/) and an SSL certificate as well as an SSL key.
 
 ```bash
 bash -c run_sec.sh
