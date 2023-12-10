@@ -35,8 +35,8 @@ class RandomDataGenerator:
         letters = string.ascii_letters
         letters += "0123456789"
         letters += ",.-_+*#!$%&"
-        authkey = "testkey"
-        while self.get_auth_id(authkey) != []:
+        authkey = "123456789123456789123456789"
+        while self.get_auth_id(authkey) != [] or len(authkey) != 20:
             authkey = "".join(random.choice(letters) for i in range(20))
         return authkey
 

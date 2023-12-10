@@ -142,7 +142,7 @@ class DatabaseServer:
             return response_message, response_code.value
 
         @self.app.route(APIRoutes.UPDATE_LOCATION.value, methods=["POST"])
-        def show_verbrauch_timeframe():
+        def update_location():
             response_message = "not implemented"
             response_code = HTTPCodes.DEFAULT
             db: DbConnector = DbConnector(self.sqlite_file)
