@@ -29,3 +29,9 @@ class CreateEditData(forms.Form):
     street_number = forms.CharField(max_length=10, label="Street Number")
     postal_code = forms.CharField(max_length=10, label="Postal Code")
     city = forms.CharField(max_length=100, label="City")
+    password = forms.CharField(
+        min_length=10, label="Password", widget=forms.PasswordInput, required=False
+    )
+    auth_key = forms.CharField(
+        max_length=20, min_length=20, label="Authentication Key Messtellenbetreiber", required=False
+    )
