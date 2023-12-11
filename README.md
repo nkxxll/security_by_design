@@ -73,6 +73,16 @@ CSRF_COOKIE_SECURE = True # this should be set to true
 
 [What are those settins](https://docs.djangoproject.com/en/5.0/topics/security/)
 
+3. Take out the admin site we only need it for developement in production. This site is just an attack vector that is not necessary. For that go to the `urls.py` and comment out this protion.
+
+```python
+urlpatterns = [
+    # path("admin/", admin.site.urls), # this needs to be commented out in production no need for an admin site
+    path("", views.index, name="index"),
+# ...
+]
+```
+
 3. Start the server with [gunicorn](https://gunicorn.org/) and an SSL certificate as well as an SSL key.
 
 ```bash
