@@ -1,3 +1,4 @@
+import base64, io
 from typing import Tuple
 from logging import getLogger
 from django.contrib.admin.options import HttpResponseRedirect
@@ -7,6 +8,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from jsonschema import validate, ValidationError
 from power_data.models import PowerData
+import matplotlib.pyplot as plt
+from datetime import datetime
+from matplotlib.ticker import LinearLocator
 
 # this is for the power data validation
 import requests
@@ -159,14 +163,30 @@ def profile(request):
     user_data = PowerData.objects.get(user=request.user)
     context["user_data"] = user_data
 
-    dictionary = [{'a': 1}, {'b': 2}, {'c': 3}]
-    a: list[list[Any]] = []
+    values = []
+    timestamps = []
+    for i, val in enumerate(power_data["stromverbrauch"]):
+        for j in val:
+            values.append(val[j])
+            timestamps.append(int(j))
 
-    for value in power_data["stromverbrauch"]:
-        for key, value in value.items():
-            a.append([int(key), value])
+    dates = [datetime.utcfromtimestamp(ts / 1000) for ts in timestamps]
+    
+    fig, ax = plt.subplots(figsize=(10,4))
+    ax.plot(dates, values, '--bo')
 
-    context["power_data"] = a
+    fig.autofmt_xdate()
+    ax.set_title('By date')
+    ax.set_ylabel("Timestamp")
+    ax.set_xlabel("Data")
+    ax.grid(linestyle="--", linewidth=0.5, color='.25', zorder=-10)
+    ax.yaxis.set_minor_locator(LinearLocator(25))
+
+    flike = io.BytesIO()
+    fig.savefig(flike)
+    b64 = base64.b64encode(flike.getvalue()).decode()
+    context['chart'] = b64
+
     LOGGER.info(f'{context["power_data"]}')
 
     return render(request, "profile.html", context)
