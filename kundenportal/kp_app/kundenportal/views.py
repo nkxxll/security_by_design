@@ -8,14 +8,17 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from jsonschema import validate, ValidationError
 from power_data.models import PowerData
-import matplotlib.pyplot as plt
 from datetime import datetime
+import requests
+from .utils.forms import CreateUserForm, CreateUserMeta, CreateEditData
+import matplotlib
+# use agg backend to prevent gui error
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
 from matplotlib.ticker import LinearLocator
 
 # this is for the power data validation
-import requests
 
-from .utils.forms import CreateUserForm, CreateUserMeta, CreateEditData
 
 LOGGER = getLogger(__name__)
 SCHEMA = {
