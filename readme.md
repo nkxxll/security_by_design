@@ -83,7 +83,7 @@ urlpatterns = [
 ]
 ```
 
-4. Start the server with [gunicorn](https://gunicorn.org/) and an SSL certificate as well as an SSL key.
+3. Start the server with [gunicorn](https://gunicorn.org/) and an SSL certificate as well as an SSL key.
 
 ```bash
 bash -c run_sec.sh
