@@ -1,3 +1,4 @@
+import base64, io
 from typing import Tuple
 from logging import getLogger
 from django.contrib.admin.options import HttpResponseRedirect
@@ -7,6 +8,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from jsonschema import validate, ValidationError
 from power_data.models import PowerData
+import matplotlib.pyplot as plt
+from datetime import datetime
+from matplotlib.ticker import LinearLocator
 
 # this is for the power data validation
 import requests
@@ -158,6 +162,59 @@ def profile(request):
     LOGGER.debug(context["power_data"])
     user_data = PowerData.objects.get(user=request.user)
     context["user_data"] = user_data
+
+    values_alltime = []
+    timestamps_alltime = []
+    for i, val in enumerate(power_data["stromverbrauch"]):
+        for j in val:
+            values_alltime.append(val[j])
+            timestamps_alltime.append(int(j))
+
+    dates_alltime = [datetime.utcfromtimestamp(ts / 1000) for ts in timestamps_alltime]
+
+    fig_alltime, ax_alltime = plt.subplots(figsize=(10,4))
+    ax_alltime.plot(dates_alltime, values_alltime, '--bo')
+
+    fig_alltime.autofmt_xdate()
+    ax_alltime.set_title('By date')
+    ax_alltime.set_ylabel("Data")
+    ax_alltime.set_xlabel("Timestamp")
+    ax_alltime.grid(linestyle="--", linewidth=0.5, color='.25', zorder=-10)
+    ax_alltime.yaxis.set_minor_locator(LinearLocator(25))
+    plt.savefig('books_read.png')
+
+    flike_alltime = io.BytesIO()
+    fig_alltime.savefig(flike_alltime)
+    b64_alltime = base64.b64encode(flike_alltime.getvalue()).decode()
+    context['chart_alltime'] = b64_alltime
+
+    values_q423 = []
+    timestamps_q423 = []
+    for i, val in enumerate(power_data["stromverbrauch_q423"]):
+        for j in val:
+            values_q423.append(val[j])
+            timestamps_q423.append(int(j))
+
+    dates_q423 = [datetime.utcfromtimestamp(ts / 1000) for ts in timestamps_q423]
+
+    fig_q423, ax_q423 = plt.subplots(figsize=(10,4))
+    ax_q423.plot(dates_q423, values_q423, '--bo')
+
+    fig_q423.autofmt_xdate()
+    ax_q423.set_title('By date')
+    ax_q423.set_ylabel("Data")
+    ax_q423.set_xlabel("Timestamp")
+    ax_q423.grid(linestyle="--", linewidth=0.5, color='.25', zorder=-10)
+    ax_q423.yaxis.set_minor_locator(LinearLocator(25))
+    plt.savefig('books_read.png')
+
+    flike_q423 = io.BytesIO()
+    fig_q423.savefig(flike_q423)
+    b64_q423 = base64.b64encode(flike_q423.getvalue()).decode()
+    context['chart_q423'] = b64_q423
+
+    LOGGER.info(f'{context["power_data"]}')
+
     return render(request, "profile.html", context)
 
 

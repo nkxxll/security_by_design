@@ -50,7 +50,15 @@
               <p class="mb-0">Contract</p>
             </div>
             <div class="col-sm-9">
-              <p class="text-muted mb-0">{{ user_data.contract }}</p>
+              {% if user_data.contract == '1' %}
+                <p class="text-muted mb-0">Low</p>
+              {% elif user_data.contract == '2' %}
+                <p class="text-muted mb-0">Middle</p>
+              {% elif user_data.contract == '3' %}
+                <p class="text-muted mb-0">High</p>
+              {% elif user_data.contract == '4' %}
+                <p class="text-muted mb-0">Very high</p>
+              {% endif %}
             </div>
           </div>
           <hr>
@@ -84,7 +92,7 @@
       </div>
     </div>
 
-    <div class="bg-body-tertiary" style="background-color: white; margin-top: 30px; margin-left: 3%; width: 94%; border-radius: 6px; box-shadow: 0 5px 10px rgba(0,0,0,0.2);">
+    <div class="bg-body-tertiary" style="background-color: white; margin-top: 30px; margin-bottom: 30px; margin-left: 3%; width: 94%; border-radius: 6px; box-shadow: 0 5px 10px rgba(0,0,0,0.2);">
       <div class="card-body">
         <div class="row">
           <div class="col-sm-3">
@@ -106,10 +114,19 @@
         <hr>
         <div class="row">
           <div class="col-sm-3">
-            <p class="mb-0">Power consumption</p>
+            <p class="mb-0">Power consumption all time</p>
           </div>
           <div class="col-sm-9">
-            <p class="text-muted mb-0">{{ power_data }}</p>
+            <img src='data:image/png;base64,{{ chart_alltime }}'>
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-sm-3">
+            <p class="mb-0">Power consumption 4th quarter 2023</p>
+          </div>
+          <div class="col-sm-9">
+            <img src='data:image/png;base64,{{ chart_q423 }}'>
           </div>
         </div>
       </div>
