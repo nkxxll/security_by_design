@@ -175,7 +175,6 @@ def profile(request):
     LOGGER.debug(context["power_data"])
     user_data = PowerData.objects.get(user=request.user)
     context["user_data"] = user_data
-<<<<<<< HEAD
 
     values_alltime = []
     timestamps_alltime = []
@@ -229,9 +228,6 @@ def profile(request):
 
     LOGGER.info(f'{context["power_data"]}')
 
-=======
-    LOGGER.info(f"profile - User with the id: {request.user.id} requested the profile page")
->>>>>>> 67bc063f070c46969cc458912e2d1707f8b94328
     return render(request, "profile.html", context)
 
 
