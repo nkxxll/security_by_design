@@ -144,3 +144,4 @@ SECURE_HSTS_PRELOAD = True # this should be set to true in production
 SECURE_SSL_REDIRECT =  True # this should be set to true in production
 SESSION_COOKIE_SECURE = True # this should be set to true
 CSRF_COOKIE_SECURE = True # this should be set to true
+CSRF_COOKIE_HTTPONLY = True # this should be set to true
