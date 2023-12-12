@@ -27,9 +27,9 @@ SECRET_KEY = "django-insecure-$9v_e0v&$riaxz8fd!ndu7=tcf^^(6pshitfje7l^=#_g)+q1%
 SECRET_KEY = get_random_secret_key()
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [".localhost", "127.0.0.1", "[::1]"]
 
 
 # Application definition
@@ -138,9 +138,9 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Security
-SECURE_HSTS_SECONDS = 0 # NOTE: this is a low value for testing can be higher in production
-SECURE_HSTS_INCLUDE_SUBDOMAINS = False # this should be set to true in production
-SECURE_HSTS_PRELOAD = False # this should be set to true in production
-SECURE_SSL_REDIRECT =  False # this should be set to true in production
-SESSION_COOKIE_SECURE = False # this should be set to true
-CSRF_COOKIE_SECURE = False # this should be set to true
+SECURE_HSTS_SECONDS = 1 # NOTE: this is a low value for testing can be higher in production
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True # this should be set to true in production
+SECURE_HSTS_PRELOAD = True # this should be set to true in production
+SECURE_SSL_REDIRECT =  True # this should be set to true in production
+SESSION_COOKIE_SECURE = True # this should be set to true
+CSRF_COOKIE_SECURE = True # this should be set to true
