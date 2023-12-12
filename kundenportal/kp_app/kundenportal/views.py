@@ -197,7 +197,6 @@ def profile(request):
     ax_alltime.set_xlabel("Timestamp")
     ax_alltime.grid(linestyle="--", linewidth=0.5, color='.25', zorder=-10)
     ax_alltime.yaxis.set_minor_locator(LinearLocator(25))
-    plt.savefig('books_read.png')
 
     flike_alltime = io.BytesIO()
     fig_alltime.savefig(flike_alltime)
