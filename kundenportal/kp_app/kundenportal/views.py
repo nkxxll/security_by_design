@@ -222,7 +222,6 @@ def profile(request):
     ax_q423.set_xlabel("Timestamp")
     ax_q423.grid(linestyle="--", linewidth=0.5, color='.25', zorder=-10)
     ax_q423.yaxis.set_minor_locator(LinearLocator(25))
-    plt.savefig('books_read.png')
 
     flike_q423 = io.BytesIO()
     fig_q423.savefig(flike_q423)
